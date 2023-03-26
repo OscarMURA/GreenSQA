@@ -1,29 +1,100 @@
 package model;
 
 import java.util.Calendar;
-import java.util.Scanner;
 
 public class ProjectSQA {
 
 	private String name;
-	private Calendar endDate;
-	private Calendar startDate;
 	private double budget;
-	private Person[] clients;
-	
-	private Person[] manager;
-	
 
+	private Calendar endDate;
+	private Calendar realEnd;
+	private Calendar startDate;
+	private Calendar realStart;
 
-	private Scanner input = new Scanner(System.in);
-	private Stage stage;
-	private int month;
+	private Stage stage[] = {
 
-	public ProjectSQA(String name, Calendar endDate, Calendar startDate, double budget) {
+			new Stage(TypeStage.Start),
+			new Stage(TypeStage.Analysis),
+			new Stage(TypeStage.Design),
+			new Stage(TypeStage.Execution),
+			new Stage(TypeStage.Clouse),
+			new Stage(TypeStage.MonitoringAndControl)
+
+	};
+	private Person client;
+	private Person[] managers = new Person[10];
+
+	private int counterStage = 0;
+	private int counterManager = 0;
+
+	public String getNameStage(int pos) {
+		return this.stage[pos].getType();
+	}
+
+	public int getCounterStage() {
+		return counterStage;
+	}
+
+	public ProjectSQA(String name, Calendar startDate, double budget) {
 		this.name = name;
-		this.endDate = endDate;
+
 		this.startDate = startDate;
 		this.budget = budget;
+		stage[0].setRealStart(startDate);
+		stage[0].setStart(startDate);
+		stage[0].setMode(true);
+	}
+
+	public boolean registerPerson(String name, String phone, String typePerson) {
+		boolean correctSave = false;
+
+		if (typePerson == "Clients") {
+			client = new Person(name, phone, TypePerson.Costumer);
+			correctSave = true;
+
+		} else {
+			managers[counterManager++] = new Person(name, phone, TypePerson.Manager);
+			correctSave = true;
+
+		}
+		return correctSave;
+	}
+
+	public boolean assingDate(int[] month) {
+
+		Calendar startDate[] = new Calendar[6];
+		Calendar endDate[] = new Calendar[6];
+
+		endDate[0] = stage[0].getStart();
+		endDate[0].add(Calendar.MONTH, month[0]);
+		stage[0].setEnd(endDate[0]);
+
+		for (int j = 1; j < month.length; j++) {
+
+			startDate[j] = endDate[j - 1];
+
+			stage[j].setStart(startDate[j]);
+			endDate[j] = startDate[j];
+			endDate[j].add(Calendar.MONTH, month[j]);
+
+			stage[j].setEnd(endDate[j]);
+
+		}
+
+		return true;
+	}
+
+	public boolean aprobation(Calendar realEnd) {
+
+		stage[counterStage].setMode(false);
+		stage[counterStage].setRealEnd(realEnd);
+
+		if (counterStage < 6) {
+			stage[++counterStage].setRealStart(realEnd);
+		}
+		return true;
+
 	}
 
 	public String getName() {
@@ -66,58 +137,20 @@ public class ProjectSQA {
 		this.budget = budget;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @param endDate
-	 * @param startDate
-	 * @param budget
-	 */
-
-	public void registerPerson() {
-		int amount = 0;
-		String name = "";
-		String phone = "";
-		int j = 1;
-
-		do {
-			String subject = (j == 1) ? "clients" : "Manager";
-
-			System.out.println("How many project  " + subject + "  are you goint to enter?: ");
-			amount = input.nextInt();
-			clients = new Person[amount];
-
-			for (int i = 0; i < amount; i++) {
-
-				System.out.print("Enter the " + subject + " name: ");
-				name = input.nextLine();
-				input.nextLine();
-
-				System.out.print("Enter the " + subject + " phone: ");
-				phone = input.next();
-
-				if (j == 1) {
-					clients[i] = new Person(name, phone, TypePerson.Costumer);
-					
-
-				} else if (j == 2) {
-					manager[i] = new Person(name, phone, TypePerson.Manager);
-					
-				}
-
-			}
-			j++;
-		} while (j <= 2);
-
+	public Calendar getRealEnd() {
+		return realEnd;
 	}
 
-	/**
-	 * 
-	 * @param stage
-	 */
-	public void stageAdministration(Stage[] stage) {
-		// TODO - implement ProjectSQA.stageAdministration
-		throw new UnsupportedOperationException();
+	public void setRealEnd(Calendar realEnd) {
+		this.realEnd = realEnd;
+	}
+
+	public Calendar getRealStart() {
+		return realStart;
+	}
+
+	public void setRealStart(Calendar realStart) {
+		this.realStart = realStart;
 	}
 
 	/**

@@ -1,17 +1,25 @@
 package model;
-import java.util.Date;
+import java.util.Calendar;
+
 public class Stage {
 
 	private TypeStage typeStage;
-	private Date start;
-	private Date end;
-	private Date realStart;
-	private Date realEnd;
-	private String mode;
+	private Calendar start;
+	private Calendar end;
+	private Calendar realStart;
+	private Calendar realEnd;
+	private boolean mode;
 	private Capsule capsule;
+	
+	public Stage(TypeStage typeStage){
+		this.typeStage=typeStage;
+		this.mode=false;
+		
+	}
 
-	public TypeStage getTypeStage() {
-		return this.typeStage;
+
+	public String getType() {
+		return this.typeStage.name();
 	}
 
 	/**
@@ -22,7 +30,7 @@ public class Stage {
 		this.typeStage = typeStage;
 	}
 
-	public Date getStart() {
+	public Calendar getStart() {
 		return this.start;
 	}
 
@@ -30,11 +38,11 @@ public class Stage {
 	 * 
 	 * @param start
 	 */
-	public void setStart(Date start) {
+	public void setStart(Calendar start) {
 		this.start = start;
 	}
 
-	public Date getEnd() {
+	public Calendar getEnd() {
 		return this.end;
 	}
 
@@ -42,11 +50,11 @@ public class Stage {
 	 * 
 	 * @param end
 	 */
-	public void setEnd(Date end) {
+	public void setEnd(Calendar end) {
 		this.end = end;
 	}
 
-	public Date getRealStart() {
+	public Calendar getRealStart() {
 		return this.realStart;
 	}
 
@@ -54,11 +62,11 @@ public class Stage {
 	 * 
 	 * @param realStart
 	 */
-	public void setRealStart(Date realStart) {
+	public void setRealStart(Calendar realStart) {
 		this.realStart = realStart;
 	}
 
-	public Date getRealEnd() {
+	public Calendar getRealEnd() {
 		return this.realEnd;
 	}
 
@@ -66,11 +74,11 @@ public class Stage {
 	 * 
 	 * @param realEnd
 	 */
-	public void setRealEnd(Date realEnd) {
+	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
 	}
 
-	public String getMode() {
+	public boolean getMode() {
 		return this.mode;
 	}
 
@@ -78,7 +86,7 @@ public class Stage {
 	 * 
 	 * @param mode
 	 */
-	public void setMode(String mode) {
+	public void setMode(boolean mode) {
 		this.mode = mode;
 	}
 

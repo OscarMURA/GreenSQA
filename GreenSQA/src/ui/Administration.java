@@ -1,6 +1,7 @@
 
-package ui;
-import model.ProjectSQA;
+
+import model.Controller;
+
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -8,19 +9,23 @@ import java.util.Scanner;
 public class Administration {
 
 	public static Scanner input=new Scanner(System.in);
-	private static final int  SIZE=10; 
-	private ProjectSQA[] projectSQA;
-	private int projectAmount=0;
+	
+
+	
+	private Controller controller;
 	private Scanner reader;
+	private boolean correctFuncion=false;
 
 	public Administration(){
-		projectSQA=new ProjectSQA[SIZE];
+
 		reader=new Scanner(System.in);
+		controller=new Controller();
+
 	}
 
 
 	public static void main(String[] args){
-		
+		System.out.println("Hola mundo");
 		Administration admin=new Administration();
 		admin.registerProject();
 
@@ -29,28 +34,49 @@ public class Administration {
 
 	public void registerProject() {
 		String name="";
-		String phone="";
-		Calendar startDate;
-		Calendar endDate;
-		double budget=0;
-		boolean isCostumer=false;//its variable is to choose if is project costumer or manager
+	
+		Calendar startDate=Calendar.getInstance();
 
+		double budget=0;
+		
+		System.out.println(11);
 		System.out.print("Type the project name: ");
 		name=reader.nextLine();
 
-		System.out.println("Type the start Date: ");
-		startDate=verifyDate();
-
-		System.out.println("Type the end Date: ");
-		endDate=verifyDate();
 		System.out.print("Type the project budget: ");
 		budget=validateDouble();
 
-		projectSQA[projectAmount]=new ProjectSQA(name, endDate,startDate, budget);
+		controller.registerProject(name, startDate, budget);
 
-		projectSQA[projectAmount].registerPerson();
+		registerPerson();
+	}
 
-		 
+
+	private void registerPerson() {
+		String name;
+		String phone;
+		int i=0;
+		correctFuncion=false;
+		do{
+
+		String typePerson=(i==0)?"Clients":"Manager";
+		System.out.print("How many project "+typePerson+" will you enter? ");
+		int amount=input.nextInt();
+
+		for (int j = 0; j < amount; j++) {
+			
+
+			System.out.print("Type your name: ");
+			name=reader.nextLine();
+			System.out.print("\nType yout phone: ");
+			phone=reader.next();
+
+			correctFuncion=controller.registerPerson(name, phone, typePerson);
+
+			System.out.println("The "+name+"'s data was saver?: "+correctFuncion);
+
+		}
+		}while(i<2);
 	}
 
 
@@ -59,7 +85,7 @@ public class Administration {
 		double option=0;
         do{
         if(input.hasNextDouble()){
-            
+         
             option=input.nextDouble(); 
             input.nextLine();           
         }else{
@@ -72,43 +98,42 @@ public class Administration {
         return option;
     }
 
-	public static Calendar verifyDate(){
-		Calendar calendar = Calendar.getInstance();
-		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-		boolean correctDate=false;
-		String format="";
-
-		do{
-		System.out.print("Type the date in format: dd/MM/yyyy: ");
-		format=input.nextLine();
-
-		try {
-            calendar.setTime(formatDate.parse(format));
-			correctDate=true;
-
-        } catch (Exception e) {
-            System.out.println("The entered date is invalid");
-			correctDate=false;
-        }
-		}while(!correctDate);
-		
-		return calendar;
-	}
-
 	
+	
+	public void stageApprobation(){
 
-	/**
-	 * 
-	 * @param name
-	 */
-	public ProjectSQA searchProjectSQA(String name) {
-		// TODO - implement Administration.searchProjectSQA
-		throw new UnsupportedOperationException();
+		int option=0;
+		System.out.print(" Estas seguro qur quieres aprobar  "+controller.presentStageName());
+		System.out.print(" Si(1) o No(2): ");
+		option=reader.nextInt();
+
+
+		if(option==1){
+			Calendar realEnd=Calendar.getInstance();
+			controller.aprobationStage(realEnd);
+		} else{
+			System.out.println("\nYou came out correctly.");
+		}
+
 	}
 
-	public void operation() {
-		// TODO - implement Administration.operation
-		throw new UnsupportedOperationException();
+	public void assingDate(){
+		correctFuncion=false;
+		int[] month=new int[6];
+		System.out.println("\3Assing tha date for each stage\3 ");
+
+		for (int i = 0; i <month.length; i++) {
+			System.out.print(" How long months it will carry tha stage  "+controller.presentStageName());
+			month[i]=reader.nextInt();
+		}
+
+		correctFuncion=controller.assingDate(month);
+
+		System.out.println("Se asignaron correctamente la fechas? "+correctFuncion);
+		System.out.println();
 	}
+
+
 
 }
+

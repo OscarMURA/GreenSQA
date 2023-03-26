@@ -1,11 +1,21 @@
 package model;
 
 public enum TypeCapsule {
-	;
+	
 
-	private int Tecnic;
-	private int Manage;
-	private int Domain;
-	private int Experience;
+	 Tecnic("Tecnic"),
+	 Manage("Manage"),
+	 Domain("Domain"),
+	 Experience("Experience");
+
+	public final String type;
+
+	TypeCapsule(String type){
+		this.type=type;
+	}
+
+	public String getType(){
+		return type;
+	}
 
 }
