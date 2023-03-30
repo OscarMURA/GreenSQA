@@ -8,7 +8,7 @@ public enum TypeStage {
 	 Design("Design"),
 	 Execution("Execution"),
 	 Clouse("Clouse"),
-	 MonitoringAndControl(" Monitoring and project control");
+	 MonitoringAndControl("Monitoring and project control");
 
 	 public final String type;
 

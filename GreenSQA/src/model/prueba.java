@@ -14,6 +14,13 @@ public class prueba{
         SimpleDateFormat formatD = new SimpleDateFormat("dd/MM/yyyy");
         Calendar calendar = Calendar.getInstance();
 
+        String hola="Como esta senior #Jhon Jairo# Loca marias";
+
+        System.out.println(  capsuleHashtag(hola) );
+
+
+       
+
 		boolean correctDate=false;
         Calendar startDate[]=new Calendar[6];
 		Calendar endDate[]=new Calendar[6];
@@ -53,7 +60,19 @@ public class prueba{
 		} 
     }
 
-        
+        	public static String capsuleHashtag(String description) {
+		String hashtag = "si no funciona";
+		int init = -1;
+		int finaL = -1;
+		init = description.indexOf("#");
+		finaL = description.indexOf("#", init + 1);
+
+		if (init != -1 && finaL != -1) {
+			hashtag = description.substring(init + 1, finaL);
+		}
+
+		return hashtag;
+	}
 
 
 

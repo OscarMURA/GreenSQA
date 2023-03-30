@@ -1,4 +1,5 @@
 package model;
+
 import java.util.Calendar;
 
 public class Stage {
@@ -9,47 +10,75 @@ public class Stage {
 	private Calendar realStart;
 	private Calendar realEnd;
 	private boolean mode;
-	private Capsule capsule;
-	
-	public Stage(TypeStage typeStage){
-		this.typeStage=typeStage;
-		this.mode=false;
+	private Capsule capsule[] = new Capsule[50];
+	private int capCouter = 0;
+
+	public Stage(TypeStage typeStage) {
+		this.typeStage = typeStage;
 		
 	}
 
+	public Capsule getCapsule(int i) {
+		return capsule[i];
+	}
+
+	public String addCapsule(Capsule capsule) {
+
+		String register = "The capsule was not registered successfully, no space to add\n";
+
+		if (capCouter != this.capsule.length) {
+
+			this.capsule[capCouter++] = capsule;
+			register = "The capsule was registered successfully\n";
+		}
+
+		return register;
+	}
 
 	public String getType() {
-		return this.typeStage.name();
+		return this.typeStage.getType();
 	}
 
-	/**
-	 * 
-	 * @param typeStage
-	 */
-	public void setTypeStage(TypeStage typeStage) {
-		this.typeStage = typeStage;
+	public boolean capsuleApproval(String id) {
+
+		Calendar aprobationDate = Calendar.getInstance();
+		boolean aprobation = false;
+
+		if (searchCapsule(id) != (null)) {
+
+			searchCapsule(id).setAprobation(true);
+			searchCapsule(id).setAprobationDate(aprobationDate);
+			aprobation = true;
+
+		}
+
+		return aprobation;
 	}
 
-	public Calendar getStart() {
-		return this.start;
+	public Capsule searchCapsule(String id) {
+		boolean isFound = false;
+		Capsule capsule = null;
+
+		for (int i = 0; i < this.capsule.length && !isFound; i++) {
+
+			if(this.capsule[i]!=null && this.capsule[i].getId().equalsIgnoreCase(id)){
+				capsule = this.capsule[i];
+				isFound = true;
+				
+			}
+			
+		}
+		return capsule;
 	}
 
-	/**
-	 * 
-	 * @param start
-	 */
 	public void setStart(Calendar start) {
 		this.start = start;
 	}
 
-	public Calendar getEnd() {
-		return this.end;
+	public Calendar getStart() {
+		return start;
 	}
 
-	/**
-	 * 
-	 * @param end
-	 */
 	public void setEnd(Calendar end) {
 		this.end = end;
 	}
@@ -58,22 +87,13 @@ public class Stage {
 		return this.realStart;
 	}
 
-	/**
-	 * 
-	 * @param realStart
-	 */
+	public Calendar getEnd() {
+		return end;
+	}
 	public void setRealStart(Calendar realStart) {
 		this.realStart = realStart;
 	}
 
-	public Calendar getRealEnd() {
-		return this.realEnd;
-	}
-
-	/**
-	 * 
-	 * @param realEnd
-	 */
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
 	}
@@ -82,26 +102,8 @@ public class Stage {
 		return this.mode;
 	}
 
-	/**
-	 * 
-	 * @param mode
-	 */
 	public void setMode(boolean mode) {
 		this.mode = mode;
-	}
-
-	public String registerCapsule() {
-		// TODO - implement Stage.registerCapsule
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param capsule
-	 */
-	public void capsuleApprobation(int capsule) {
-		// TODO - implement Stage.capsuleApprobation
-		throw new UnsupportedOperationException();
 	}
 
 }
