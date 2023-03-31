@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Calendar;
-
+import java.text.SimpleDateFormat;
 public class ProjectSQA {
 
 	private String name;
@@ -13,6 +13,7 @@ public class ProjectSQA {
 	private Person managers;
 	private int counterStage = 0;
 
+	private SimpleDateFormat view = new SimpleDateFormat("dd/MM/yyyy 'hours: ' hh:mm:ss a");
 	private Stage stage[] = {
 			new Stage(TypeStage.Start),
 			new Stage(TypeStage.Analysis),
@@ -32,10 +33,11 @@ public class ProjectSQA {
 
 	public ProjectSQA(String name, Calendar startDate, double budget) {
 		this.name = name;
-		this.startDate = startDate;
+		this.startDate =(Calendar) startDate.clone() ;
 		this.budget = budget;
-		stage[0].setRealStart(startDate);
-		stage[0].setStart(startDate);
+
+		stage[0].setRealStart(  (Calendar) startDate.clone()  );
+		stage[0].setStart( (Calendar) startDate.clone()  );
 		stage[0].setMode(true);
 	}
 
@@ -48,7 +50,7 @@ public class ProjectSQA {
 
 		} else {
 			managers = new Person(name, phone, TypePerson.Manager);
-			
+
 		}
 
 		return register;
@@ -59,41 +61,54 @@ public class ProjectSQA {
 		Calendar startDate[] = new Calendar[6];
 		Calendar endDate[] = new Calendar[6];
 
-		endDate[0] = stage[0].getStart();
+		/*
+		 * To assign the date from one Calendar object to another Calendar object safely 
+		 * and to avoid errors, the .clone() method can be used to create a copy of the original 
+		 * object. In this way, if one of the instances is modified, the other will not be affected.
+		 */
+
+		String init =view.format( this.startDate.getTime() ); //for show the start date of the project
+		
+		endDate[0] = (Calendar) stage[0].getStart().clone();
 		endDate[0].add(Calendar.MONTH, month[0]);
-		stage[0].setEnd(endDate[0]);
+		stage[0].setEnd( (Calendar) endDate[0].clone()    );
 
 		for (int j = 1; j < month.length; j++) {
 
-			startDate[j] = endDate[j - 1];
-			stage[j].setStart(startDate[j]);
-			endDate[j] = startDate[j];
-			endDate[j].add(Calendar.MONTH, month[j]);
+			startDate[j] = (Calendar) endDate[j - 1].clone();
+			stage[j].setStart(  (Calendar) startDate[j].clone());
+			endDate[j] = (Calendar) startDate[j].clone();	
+			endDate[j].add(Calendar.MONTH, month[j]);		
+			stage[j].setEnd(  (Calendar) endDate[j].clone());
+			
 
-			stage[j].setEnd(endDate[j]);
 		}
-
-		this.endDate = endDate[5];// the planned end date of the project is assigned
-		return "The assing from the month was resgistered successfully\n";
+	
+		this.endDate = (Calendar) stage[5].getEnd().clone();// the planned end date of the project is assigned
+		return "The assing from the month was resgistered successfully\n"+name+
+		" project: \n-Planned Start date= "+init+"\n-Planned end date= "+view.format(this.endDate.getTime());
 	}
 
 	public String approbationStage(Calendar realEnd) {
 		String approbation="";
-
+		
 		if (stage[ counterStage ].getMode() != false) {
 
-			approbation="The stage was approved";
 			stage[counterStage].setMode(false);
-			stage[counterStage].setRealEnd(realEnd);
-
+			stage[counterStage].setRealEnd(  (Calendar) realEnd.clone() );
+			approbation="The stage "+getStage(counterStage).getType()+" was approved on "+view.format( stage[counterStage].getRealEnd().getTime()  );
+			
 			if (counterStage < 5) {
-				stage[++counterStage].setRealStart(realEnd);
+				this.realEnd=realEnd;
+				stage[++counterStage].setRealStart((Calendar) realEnd.clone());
 				stage[counterStage].setMode(true);
-				approbation="se guardo la ultimia fecha de inicio";
+				
 			}
 
 		}else{
-			approbation="There are nos Stage for aprove, finish.\3";
+			String init=view.format(this.startDate.getTime());//for show the start date of the project
+			approbation="All the stage was approved. "+name+"'s project:\n-Real start date:"+
+			init+"\n-Real end Date: "+view.format(this.realEnd.getTime());
 		}
 		return approbation;
 

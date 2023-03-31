@@ -5,11 +5,11 @@ import java.util.Calendar;
 public class Stage {
 
 	private TypeStage typeStage;
-	private Calendar start;
+	private Calendar start; 
 	private Calendar end;
 	private Calendar realStart;
 	private Calendar realEnd;
-	private boolean mode;
+	private boolean mode=false;
 	private Capsule capsule[] = new Capsule[50];
 	private int capCouter = 0;
 
@@ -82,20 +82,22 @@ public class Stage {
 	public void setEnd(Calendar end) {
 		this.end = end;
 	}
-
-	public Calendar getRealStart() {
-		return this.realStart;
-	}
-
 	public Calendar getEnd() {
 		return end;
 	}
+	public Calendar getRealStart() {
+		return this.realStart;
+	}
+	
 	public void setRealStart(Calendar realStart) {
 		this.realStart = realStart;
 	}
 
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
+	}
+	public Calendar getRealEnd() {
+		return realEnd;
 	}
 
 	public boolean getMode() {

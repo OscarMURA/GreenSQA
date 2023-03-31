@@ -2,7 +2,6 @@ package model;
 
 public enum TypeStage {
 	
-
 	 Start("Start"),
 	 Analysis("Analysis"),
 	 Design("Design"),
