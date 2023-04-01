@@ -11,12 +11,10 @@ public class Capsule {
 	private String learning;
 	private Calendar aprobationDate=null;
 	private boolean aprobation=false;
-
-
-
+	private String hashtag[]=new String[20];
 
 	/**
-	 * constructor method from the Capsule class
+	 * Builder method from the Capsule class
 	 * 
 	 * @param id
 	 * @param description
@@ -25,13 +23,14 @@ public class Capsule {
 	 * @param position
 	 * @param learning
 	 */
-	public Capsule(String id, String description, TypeCapsule typeCapsule, String nameCollaborator, String charge, String learning) {
+	public Capsule(String id, String description, TypeCapsule typeCapsule, String nameCollaborator, String charge, String learning,String [] hashtag) {
 		this.id=id;
 		this.description=description;
 		this.typeCapsule=typeCapsule;
 		this.nameCollaborator=nameCollaborator;
 		this.charge=charge;
 		this.learning=learning;
+		this.hashtag=hashtag;
 	}
 
 	public String getId(){

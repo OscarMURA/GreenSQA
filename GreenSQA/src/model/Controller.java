@@ -93,7 +93,7 @@ public class Controller {
      *         storage
      */
     public String addCapsule(String id, String description, int type, String nameCollaborator, String charge,
-            String learning) {
+            String learning, String[] hashtag) {
 
         if (currentProject != null) {
             TypeCapsule typeCapsule = null;
@@ -103,7 +103,7 @@ public class Controller {
                 case 3 -> typeCapsule = TypeCapsule.Domain;
                 case 4 -> typeCapsule = TypeCapsule.Experience;
             }
-            Capsule capsule = new Capsule(id, description, typeCapsule, nameCollaborator, charge, learning);
+            Capsule capsule = new Capsule(id, description, typeCapsule, nameCollaborator, charge, learning, hashtag);
 
             correctFuncion = currentProject.getStage(currentProject.counStage()).addCapsule(capsule);
         }

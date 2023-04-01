@@ -57,7 +57,6 @@ public class Administration {
 		lines();
 		System.out.println("\3" + controller.projectName() + " Project menu\3\n");
 		System.out.println("1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Go to menu\n0.Exit");
-
 	}
 
 	/**
@@ -173,7 +172,6 @@ public class Administration {
 	/**
 	 * This control method searches for a project and performs the actions shown in
 	 * the menuProject on the current project if found.
-	 * 
 	 * @return a boolean, true if found, false otherwise
 	 */
 	public boolean searchProject() {
@@ -224,7 +222,6 @@ public class Administration {
 	/**
 	 * Control method used to verify text strings with spaces for any issues.
 	 * This was implemented to prevent reading problems. 😃
-	 * 
 	 * @param scanner Scanner object
 	 * @return Returns the entire line as a String
 	 */
@@ -289,22 +286,23 @@ public class Administration {
 			learning = read(reader);
 			hashtag = capsuleHashtag(learning, hashtag);
 		} while (hashtag[free] == null);
-		System.out.println(controller.addCapsule(id, description, (int) typeCapsule, name, charge, learning));
+		System.out.println(controller.addCapsule(id, description, (int) typeCapsule, name, charge, learning, hashtag));
 
 	}
 
 	/**
 	 * This method searches for words or text strings that contain '#' and stores
 	 * them in an array as keywords for each capsule, to subsequently use another
-	 * method to search for them
+	 * method to search for them.
 	 *
+	 * At the moment it will only extract 10 capsules in description and lesson
 	 * @param description the variable that contains the text with the '#'
 	 * @param wordKey     the array that will store the '#'
 	 * @return the array with the found keywords
 	 */
 	public String[] capsuleHashtag(String description, String[] wordKey) {
 		int finaL = 0, init = 0, contador = 0, pos = 0;
-		for (int i = 0; i < description.length(); i++) {
+		for (int i = 0; i < description.length() && contador<20; i++) {
 			if (description.charAt(i) == '#') {
 				contador++;
 				if (contador % 2 == 0) {
@@ -321,7 +319,6 @@ public class Administration {
 
 	/**
 	 * Finds the free position of an array
-	 * 
 	 * @param array Array to search for free space
 	 * @return Returns the space if found, -1 otherwise.
 	 */
