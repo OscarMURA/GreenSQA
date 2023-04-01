@@ -57,10 +57,6 @@ public class ProjectSQA {
 	}
 
 	public String assingDate(int[] month) {
-
-		Calendar startDate[] = new Calendar[6];
-		Calendar endDate[] = new Calendar[6];
-
 		/*
 		 * To assign the date from one Calendar object to another Calendar object safely 
 		 * and to avoid errors, the .clone() method can be used to create a copy of the original 
@@ -69,18 +65,14 @@ public class ProjectSQA {
 
 		String init =view.format( this.startDate.getTime() ); //for show the start date of the project
 		
-		endDate[0] = (Calendar) stage[0].getStart().clone();
-		endDate[0].add(Calendar.MONTH, month[0]);
-		stage[0].setEnd( (Calendar) endDate[0].clone()    );
+		stage[0].setEnd(  (Calendar) stage[0].getStart().clone()  );
+		stage[0].getEnd().add(Calendar.MONTH, month[0]);
 
 		for (int j = 1; j < month.length; j++) {
 
-			startDate[j] = (Calendar) endDate[j - 1].clone();
-			stage[j].setStart(  (Calendar) startDate[j].clone());
-			endDate[j] = (Calendar) startDate[j].clone();	
-			endDate[j].add(Calendar.MONTH, month[j]);		
-			stage[j].setEnd(  (Calendar) endDate[j].clone());
-			
+			stage[j].setStart( (Calendar) stage[j-1].getEnd().clone()    );
+			stage[j].setEnd(  (Calendar) stage[j].getStart().clone()  );
+			stage[j].getEnd().add(Calendar.MONTH, month[j]);
 
 		}
 	
