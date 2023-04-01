@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 
 public class prueba {
 
+    //Este es mi apartado de pruebas de codigo, ¡ignorar archivo !
+
     private static Scanner reader = new Scanner(System.in);
     private static int[] month = new int[6];
 

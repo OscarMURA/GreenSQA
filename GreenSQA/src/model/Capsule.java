@@ -38,6 +38,10 @@ public class Capsule {
 		return id;
 	}
 
+	/**
+	 * Saves the approval of the capsule by accepting a true
+	 * @param aprobation
+	 */
 	public void setAprobation(boolean aprobation) {
 		this.aprobation = aprobation;
 	}

@@ -1,22 +1,34 @@
 package model;
 
 public enum TypeStage {
-	
-	 Start("Start"),
-	 Analysis("Analysis"),
-	 Design("Design"),
-	 Execution("Execution"),
-	 Clouse("Clouse"),
-	 MonitoringAndControl("Monitoring and project control");
 
-	 public final String type;
+	Start("Start"),
+	Analysis("Analysis"),
+	Design("Design"),
+	Execution("Execution"),
+	Clouse("Clouse"),
+	MonitoringAndControl("Monitoring and project control");
 
-	TypeStage(String type){
-		this.type=type;
+	/**
+	 * The name of the stage.
+	 */
+	public final String type;
+
+	/**
+	 * 
+	 * Constructor for TypeStage.
+	 * 
+	 * @param type the name of the stage
+	 */
+	TypeStage(String type) {
+		this.type = type;
 	}
 
-	public String getType(){
+	/**
+	 * Returns the name of the stage.
+	 * @return the name of the stage
+	 */
+	public String getType() {
 		return type;
 	}
-
 }

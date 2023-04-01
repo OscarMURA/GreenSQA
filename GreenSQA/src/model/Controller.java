@@ -179,6 +179,6 @@ public class Controller {
      * @return The URL for the published capsules.
      */
     public String publishCapsule() {
-        return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        return " \3 https://www.youtube.com/watch?v=dQw4w9WgXcQ  \3";
     }
 }
