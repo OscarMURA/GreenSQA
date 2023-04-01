@@ -36,8 +36,7 @@ public class Controller {
     }
 
     /**
-     * Registra el cliente o manager en un proyecto
-     * 
+     * Register the client or manager in a project
      * @param name
      * @param phone
      * @param typePerson
