@@ -1,4 +1,5 @@
 package ui;
+
 import model.Controller;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -18,7 +19,6 @@ public class Administration {
 		boolean follow = false;
 
 		Administration admin = new Administration();
-
 		do {
 			admin.lines();
 			System.out.println("\n\3Project's Management\3\n");
@@ -28,37 +28,45 @@ public class Administration {
 			do {
 				System.out.print("Correctly Type the option: ");
 				option = admin.validateDouble();
+			} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 0);
 
-			} while (option!=1.0 && option!=2.0 && option!=3.0 && option!=4.0 && option!=0);
-			
-			follow = admin.principalExecution((int)option);
+			follow = admin.principalExecution((int) option);
 
 			if (follow == true) {
-				do { 
+				do {
 
-					option = admin.menuProject();
+					admin.menuProject();
 					lines();
-					admin.projectExecution( (int)option );
+					do {
+						System.out.print("Correctly Type the option: ");
+						option = admin.validateDouble();
+					} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 0.0);
 
+					admin.projectExecution((int) option);
 				} while (option != 0 && option != 4);
 
 			}
 		} while (option != 0);
 	}
 
-	public double menuProject() {
-		double option = 0;
+	/**
+	 * View method that shows the Options from the projects menu such as registering
+	 * capsules or approving stages
+	 */
+	public void menuProject() {
 		lines();
 		System.out.println("\3" + controller.projectName() + " Project menu\3\n");
 		System.out.println("1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Go to menu\n0.Exit");
-		do {
-			System.out.print("Correctly Type the option: ");
-			option = validateDouble();
-		} while (option!=1.0 && option!=2.0 && option!=3.0 && option!=4.0 && option != 0.0);
 
-		return option;
 	}
 
+	/**
+	 * Runs the main sismeta menu, and returns a boolean yes to enter the project
+	 * menu if found
+	 * 
+	 * @param option the option chosen by the user
+	 * @return if true, you can enter the project menu otherwise it stays the same
+	 */
 	public boolean principalExecution(int option) {
 		boolean follow = false;
 		switch (option) {
@@ -79,9 +87,12 @@ public class Administration {
 		return follow;
 	}
 
+	/*
+	 * This method executes the project menu options, either register capsules,
+	 * approve capsules or approve stages
+	 */
 	public void projectExecution(int option) {
 		switch (option) {
-
 			case 1 -> registerCapsule();
 			case 2 -> capsuleApproval();
 			case 3 -> stageApprobation();
@@ -89,10 +100,17 @@ public class Administration {
 		}
 	}
 
+	/** decoration of lines for the terminal
+	 */
 	public static void lines() {
 		System.out.println("\n\3=======================================================================\3 \n");
 	}
 
+	/**
+	 * This control method is responsible for registering the projects, entering the
+	 * name and the amount of investment. In order to create a project object by
+	 * calling the controller
+	 */
 	public void registerProject() {
 
 		String name = "";
@@ -111,6 +129,13 @@ public class Administration {
 		assingDate();
 	}
 
+	/**
+	 * This control method registers the client and manager of an existing project
+	 * by calling the registerPerson() method and printing the result if the
+	 * registration was successful. It uses a for loop to recycle variables, and
+	 * depending on the type of person, the system registers them in the appropriate
+	 * place.
+	 */
 	private void registerPerson() {
 
 		String name = "", phone = "";
@@ -128,6 +153,11 @@ public class Administration {
 		}
 	}
 
+	/**This control method assigns the duration of months of each stage going through a cycle
+	 * stores them in an array of 6, with the goal of sending it to the class
+	 * projectSQA and this assigns the start and end dates
+	 * planned for each stage of the project
+	 */
 	public void assingDate() {
 		int[] month = new int[6];
 		lines();
@@ -140,6 +170,12 @@ public class Administration {
 		System.out.println(controller.assingDate(month));
 	}
 
+	/**
+	 * This control method searches for a project and performs the actions shown in
+	 * the menuProject on the current project if found.
+	 * 
+	 * @return a boolean, true if found, false otherwise
+	 */
 	public boolean searchProject() {
 		String name = "";
 		boolean isFound = false;
@@ -156,12 +192,21 @@ public class Administration {
 		return isFound;
 	}
 
+	/**
+	 * Displays the URL of the published capsules
+	 */
 	public void publishCapsules() {
 		lines();
 		System.out.println("\3Publish Capsules\3");
 		System.out.println("Url important to see: " + controller.publishCapsule());
 	}
 
+	/**
+	 * Control/View method that verifies if the input is a number, and can also be
+	 * used to verify options with necessary restrictions.
+	 * 
+	 * @return The validated double value
+	 */
 	public double validateDouble() {
 		double option = 0;
 		do {
@@ -177,21 +222,26 @@ public class Administration {
 	}
 
 	/**
-	 * Control function in order to avoid errors when the terminal reads
+	 * Control method used to verify text strings with spaces for any issues.
+	 * This was implemented to prevent reading problems. 😃
 	 * 
 	 * @param scanner Scanner object
-	 * @return Return the entire line as a String
+	 * @return Returns the entire line as a String
 	 */
 	public String read(Scanner scanner) {
-		String linea="";
-		do{
+		String line = "";
+		do {
 			scanner.useDelimiter(System.lineSeparator());
-			linea = scanner.next();
+			line = scanner.next();
 			scanner.useDelimiter("\\p{javaWhitespace}+");
-		}while(linea.equalsIgnoreCase(""));
-		return linea;
+		} while (line.equalsIgnoreCase(""));
+		return line;
 	}
 
+	/**
+	 * This method shows that the stage has been approved, by instantiating a
+	 * calendar variable to store the actual end date of the stage.
+	 */
 	public void stageApprobation() {
 		lines();
 		System.out.println("\3Stage approval\3\n");
@@ -199,14 +249,20 @@ public class Administration {
 		System.out.println(controller.approbationStage(realEnd));
 	}
 
-	public void registerCapsule() {
+	/**
+	 * This view method registers the capsules to send them to the controller
+	 * method and thus create the project's capsules of its current stage. The
+	 * controller returns whether it was saved or not.
+	 */
 
+	public void registerCapsule() {
 		String id = "", description = "", name = "", charge = "", learning = "";
 		String[] hashtag = new String[20];
 		double typeCapsule;
 
 		lines();
-		System.out.print("\3Register " + controller.stageName(controller.counStage()) + " capsule \3 \n Type the Capsule id: ");
+		System.out.print(
+				"\3Register " + controller.stageName(controller.counStage()) + " capsule \3 \n Type the Capsule id: ");
 		id = reader.next();
 		int free = 0;
 		do {
@@ -221,7 +277,7 @@ public class Administration {
 		do {
 			System.out.print("Correctly enter the capsule type: ");
 			typeCapsule = validateDouble();
-		} while (typeCapsule!=1.0 && typeCapsule!=2.0 && typeCapsule!=3.0 && typeCapsule!=4.0);
+		} while (typeCapsule != 1.0 && typeCapsule != 2.0 && typeCapsule != 3.0 && typeCapsule != 4.0);
 
 		System.out.print("\nEnter the collaborator name: ");
 		name = read(reader);
@@ -233,17 +289,24 @@ public class Administration {
 			learning = read(reader);
 			hashtag = capsuleHashtag(learning, hashtag);
 		} while (hashtag[free] == null);
-		System.out.println(controller.addCapsule(id, description, (int)typeCapsule, name, charge, learning));
-	
+		System.out.println(controller.addCapsule(id, description, (int) typeCapsule, name, charge, learning));
+
 	}
 
+	/**
+	 * This method searches for words or text strings that contain '#' and stores
+	 * them in an array as keywords for each capsule, to subsequently use another
+	 * method to search for them
+	 *
+	 * @param description the variable that contains the text with the '#'
+	 * @param wordKey     the array that will store the '#'
+	 * @return the array with the found keywords
+	 */
 	public String[] capsuleHashtag(String description, String[] wordKey) {
 		int finaL = 0, init = 0, contador = 0, pos = 0;
 		for (int i = 0; i < description.length(); i++) {
-
 			if (description.charAt(i) == '#') {
 				contador++;
-
 				if (contador % 2 == 0) {
 					init = description.indexOf("#", finaL);
 					finaL = description.indexOf("#", init + 1);
@@ -256,11 +319,18 @@ public class Administration {
 		return wordKey;
 	}
 
-	public int getFirstValidPosition(String[] wordKay) {
+	/**
+	 * Finds the free position of an array
+	 * 
+	 * @param array Array to search for free space
+	 * @return Returns the space if found, -1 otherwise.
+	 */
+
+	public int getFirstValidPosition(String[] array) {
 		int pos = -1;
 		boolean isFound = false;
-		for (int i = 0; i < wordKay.length && !isFound; i++) {
-			if (wordKay[i] == null) {
+		for (int i = 0; i < array.length && !isFound; i++) {
+			if (array[i] == null) {
 				pos = i;
 				isFound = true;
 			}
@@ -268,6 +338,11 @@ public class Administration {
 		return pos;
 	}
 
+	/**
+	 * view method that looks for the capsules to approve them, and prints if it
+	 * exists
+	 * approved otherwise
+	 */
 	public void capsuleApproval() {
 		String id = "";
 		lines();
