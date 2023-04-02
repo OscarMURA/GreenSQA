@@ -23,12 +23,14 @@ public class Administration {
 			admin.lines();
 			System.out.println("\n\3Project's Management\3\n");
 
-			System.out.println("1.Creacte project\n2.Search Project\n3.Culminate capsule\n4.Publish Capsule\n0.Exit ");
+			System.out.println("1.Creacte project\n2.Search Project\n3.Culminate capsule\n4.Publish Capsule");
+			System.out.println("5.Amount Capsule Type of all projects\n0.Exit");
 
 			do {
 				System.out.print("Correctly Type the option: ");
 				option = admin.validateDouble();
-			} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 0);
+			} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 5.0
+					&& option != 0.0);
 
 			follow = admin.principalExecution((int) option);
 
@@ -40,10 +42,13 @@ public class Administration {
 					do {
 						System.out.print("Correctly Type the option: ");
 						option = admin.validateDouble();
-					} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 0.0);
+					} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 5.0
+							&& option != 0.0);
 
 					admin.projectExecution((int) option);
-				} while (option != 0 && option != 4);
+
+
+				} while (option != 0 && option != 5);
 
 			}
 		} while (option != 0);
@@ -56,7 +61,8 @@ public class Administration {
 	public void menuProject() {
 		lines();
 		System.out.println("\3" + controller.projectName() + " Project menu\3\n");
-		System.out.println("1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Go to menu\n0.Exit");
+		System.out.println(
+				"1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Amount capsule type of this project\n5.Go to menu\n0.Exit");
 	}
 
 	/**
@@ -82,12 +88,17 @@ public class Administration {
 			case 4:
 				publishCapsules();
 				break;
+			case 5:
+				System.out.println(controller.amountType(1));
+				break;
+			case 0:
+				System.out.println("Exit");
+
 		}
 		return follow;
 	}
 
-	/*
-	 * This method executes the project menu options, either register capsules,
+	/*This method executes the project menu options, either register capsules,
 	 * approve capsules or approve stages
 	 */
 	public void projectExecution(int option) {
@@ -95,11 +106,14 @@ public class Administration {
 			case 1 -> registerCapsule();
 			case 2 -> capsuleApproval();
 			case 3 -> stageApprobation();
+			case 4 ->System.out.println(controller.amountType(2));
+
 			case 0 -> System.out.println("You went out of the program. ");
 		}
 	}
 
-	/** decoration of lines for the terminal
+	/**
+	 * decoration of lines for the terminal
 	 */
 	public static void lines() {
 		System.out.println("\n\3=======================================================================\3 \n");
@@ -152,7 +166,9 @@ public class Administration {
 		}
 	}
 
-	/**This control method assigns the duration of months of each stage going through a cycle
+	/**
+	 * This control method assigns the duration of months of each stage going
+	 * through a cycle
 	 * stores them in an array of 6, with the goal of sending it to the class
 	 * projectSQA and this assigns the start and end dates
 	 * planned for each stage of the project
@@ -172,6 +188,7 @@ public class Administration {
 	/**
 	 * This control method searches for a project and performs the actions shown in
 	 * the menuProject on the current project if found.
+	 * 
 	 * @return a boolean, true if found, false otherwise
 	 */
 	public boolean searchProject() {
@@ -222,6 +239,7 @@ public class Administration {
 	/**
 	 * Control method used to verify text strings with spaces for any issues.
 	 * This was implemented to prevent reading problems. 😃
+	 * 
 	 * @param scanner Scanner object
 	 * @return Returns the entire line as a String
 	 */
@@ -251,7 +269,6 @@ public class Administration {
 	 * method and thus create the project's capsules of its current stage. The
 	 * controller returns whether it was saved or not.
 	 */
-
 	public void registerCapsule() {
 		String id = "", description = "", name = "", charge = "", learning = "";
 		String[] hashtag = new String[20];
@@ -296,13 +313,14 @@ public class Administration {
 	 * method to search for them.
 	 *
 	 * At the moment it will only extract 10 capsules in description and lesson
+	 * 
 	 * @param description the variable that contains the text with the '#'
 	 * @param wordKey     the array that will store the '#'
 	 * @return the array with the found keywords
 	 */
 	public String[] capsuleHashtag(String description, String[] wordKey) {
 		int finaL = 0, init = 0, contador = 0, pos = 0;
-		for (int i = 0; i < description.length() && contador<20; i++) {
+		for (int i = 0; i < description.length() && contador < 20; i++) {
 			if (description.charAt(i) == '#') {
 				contador++;
 				if (contador % 2 == 0) {
@@ -319,10 +337,10 @@ public class Administration {
 
 	/**
 	 * Finds the free position of an array
+	 * 
 	 * @param array Array to search for free space
 	 * @return Returns the space if found, -1 otherwise.
 	 */
-
 	public int getFirstValidPosition(String[] array) {
 		int pos = -1;
 		boolean isFound = false;

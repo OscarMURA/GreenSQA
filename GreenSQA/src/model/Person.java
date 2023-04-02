@@ -46,7 +46,7 @@ public class Person {
 
 
 	/**
-	 * 
+	 * Builder method of the class Person
 	 * @param name
 	 * @param phone
 	 * @param typePerson

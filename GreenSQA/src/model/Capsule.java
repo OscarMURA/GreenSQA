@@ -66,5 +66,10 @@ public class Capsule {
 		return capsule.toString();
 	}
 
-
+	/**
+	 * @return Returns the name of the capsule
+	 */
+	public String getTypeCapsule() {
+		return typeCapsule.getType();
+	}
 }

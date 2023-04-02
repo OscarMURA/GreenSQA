@@ -67,37 +67,46 @@ public class Stage {
 			searchCapsule(id).setAprobation(true);
 			searchCapsule(id).setAprobationDate(aprobationDate);
 			aprobation = true;
-
 		}
 
 		return aprobation;
 	}
 
 	/**
-	 * Search for a capsule object by its id
+	 * Search for a capsule object by its id or its type
 	 * 
 	 * @param id
 	 * @return returns a capsule object, but if it is different from null it means
 	 *         that it found the capsule
 	 */
+
 	public Capsule searchCapsule(String id) {
+
+		Capsule capsule=null;
 		boolean isFound = false;
-		Capsule capsule = null;
 
 		for (int i = 0; i < this.capsule.length && !isFound; i++) {
-
 			if (this.capsule[i] != null && this.capsule[i].getId().equalsIgnoreCase(id)) {
 				capsule = this.capsule[i];
 				isFound = true;
-
 			}
-
 		}
 		return capsule;
 	}
 
+	public int amountTypeCap(String word) {
+		int type = 0;
+		for (int i = 0; i < capsule.length; i++) {
+			if(this.capsule[i]!=null && this.capsule[i].getTypeCapsule().equalsIgnoreCase(word)){
+				type++;
+			}
+		}
+		return type;
+	}
+
 	/**
 	 * Save the planned start date of the stage
+	 * 
 	 * @param start
 	 */
 	public void setStart(Calendar start) {
@@ -113,6 +122,7 @@ public class Stage {
 
 	/**
 	 * Saves the final planned date of the stage
+	 * 
 	 * @param end
 	 */
 	public void setEnd(Calendar end) {
@@ -144,6 +154,7 @@ public class Stage {
 
 	/**
 	 * Returns stage mode
+	 * 
 	 * @return True: stage on, false: stage off
 	 */
 
@@ -153,6 +164,7 @@ public class Stage {
 
 	/**
 	 * Save stage mode
+	 * 
 	 * @param mode True: stage on, false: stage off
 	 */
 	public void setMode(boolean mode) {

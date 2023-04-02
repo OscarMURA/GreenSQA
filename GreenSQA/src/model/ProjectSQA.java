@@ -28,7 +28,7 @@ public class ProjectSQA {
 	 * Control method to return a stage
 	 * 
 	 * @param pos Position of the stage array
-	 * @return pager stage
+	 * @return stage to look for
 	 */
 	public Stage getStage(int pos) {
 		return this.stage[pos];
@@ -37,7 +37,7 @@ public class ProjectSQA {
 	/**
 	 * control method that returns the position of the current stage of a project
 	 * 
-	 * @return position
+	 * @return number of the position
 	 */
 	public int counStage() {
 		return counterStage;
@@ -73,15 +73,11 @@ public class ProjectSQA {
 	public String registerPerson(String name, String phone, String typePerson) {
 
 		String register = name + "'s data was registered successfully\n";
-
 		if (typePerson == "Clients") {
-			client = new Person(name, phone, TypePerson.Costumer);
-
+			client = new Person(name, phone, "Costumer");
 		} else {
-			managers = new Person(name, phone, TypePerson.Manager);
-
+			managers = new Person(name, phone, "Manager of the project");
 		}
-
 		return register;
 	}
 
@@ -132,6 +128,7 @@ public class ProjectSQA {
 	 */
 	public String approbationStage(Calendar realEnd) {
 		String approbation = "";
+		String init = view.format(this.startDate.getTime());// for show the start date of the project
 
 		if (stage[counterStage].getMode() != false) {
 
@@ -139,17 +136,17 @@ public class ProjectSQA {
 			stage[counterStage].setRealEnd((Calendar) realEnd.clone());
 
 			approbation = "The stage " + getStage(counterStage).getType() + " was approved on "
-					+ view.format(stage[counterStage].getRealEnd().getTime());
+						+ view.format(stage[counterStage].getRealEnd().getTime());
 
 			if (counterStage < 5) {
 				this.realEnd = realEnd;
-				stage[++counterStage].setRealStart((Calendar) realEnd.clone());
+				stage[++counterStage].setRealStart( (Calendar) realEnd.clone() );
 				stage[counterStage].setMode(true);
 
 			}
 
 		} else {
-			String init = view.format(this.startDate.getTime());// for show the start date of the project
+			
 			approbation = "All the stage was approved. " + name + "'s project:\n-Real start date:" +
 					init + "\n-Real end Date: " + view.format(this.realEnd.getTime());
 		}
@@ -164,4 +161,6 @@ public class ProjectSQA {
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
 	}
+
+	
 }

@@ -37,6 +37,7 @@ public class Controller {
 
     /**
      * Register the client or manager in a project
+     * 
      * @param name
      * @param phone
      * @param typePerson
@@ -104,14 +105,15 @@ public class Controller {
                 case 4 -> typeCapsule = TypeCapsule.Experience;
             }
             Capsule capsule = new Capsule(id, description, typeCapsule, nameCollaborator, charge, learning, hashtag);
-
             correctFuncion = currentProject.getStage(currentProject.counStage()).addCapsule(capsule);
         }
 
         return correctFuncion;
     }
 
-    /**Method to approve the capsules from their id
+    /**
+     * Method to approve the capsules from their id
+     * 
      * @param id
      * @return if the capsule exists, it was approved, otherwise
      */
@@ -124,8 +126,8 @@ public class Controller {
         for (int i = 0; i < amoProject && !isFound; i++) {
             for (int j = 0; j < 6 && !isFound; j++) {
                 if (projectSQA[i] != null) {
+                    
                     isFound = projectSQA[i].getStage(j).capsuleApproval(id);
-
                     if (isFound) {
                         project = projectSQA[i].getName();
                         stage = projectSQA[i].getStage(i).getType();
@@ -180,5 +182,44 @@ public class Controller {
      */
     public String publishCapsule() {
         return " \3 https://www.youtube.com/watch?v=dQw4w9WgXcQ  \3";
+    }
+
+    /**
+     * This view method returns the number of capsules according to their type,
+     * there are two cases divided into two options, either for all projects (1) or
+     * for a specific project (2).
+     * 
+     * @param option the option 1 or 2.It's already burned in the Administration system
+     * @return Message showing the amount for each type of capsule
+     */
+    public String amountType(int option) {
+        int technical = 0, management = 0, domainSpecific = 0, experience = 0;
+        String msg = "\nCapsule Type Amount: ";
+        switch (option) {
+            case 1:
+                for (int i = 0; i < amoProject; i++) {// project cycle created
+                    for (int j = 0; j <= projectSQA[i].counStage(); j++) {// cycle until the last stage activated
+
+                        technical += projectSQA[i].getStage(j).amountTypeCap("Technical");
+                        management += projectSQA[i].getStage(j).amountTypeCap("Management");
+                        domainSpecific += projectSQA[i].getStage(j).amountTypeCap("Domain-specific");
+                        experience += projectSQA[i].getStage(j).amountTypeCap("Experience-based");
+                    }
+                }
+                break;
+
+            case 2:
+                for (int i = 0; i <= currentProject.counStage(); i++) {// cycle until the last stage activated
+                    technical += currentProject.getStage(i).amountTypeCap("Technical");
+                    management += currentProject.getStage(i).amountTypeCap("Management");
+                    domainSpecific += currentProject.getStage(i).amountTypeCap("Domain-specific");
+                    experience += currentProject.getStage(i).amountTypeCap("Experience-based");
+                }
+                break;
+        }
+        msg += "\n -Amount Technical: " + technical + "\n -Amount Management: " + management +
+                "\n -Amount Domain-specific: " + domainSpecific + "\n -Amount Experience-based: " + experience;
+
+        return msg;
     }
 }
