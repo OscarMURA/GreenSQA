@@ -1,5 +1,8 @@
 package model;
 
+/**
+  * Enumeration of the types of stages
+  */
 public enum TypeStage {
 
 	Start("Start"),

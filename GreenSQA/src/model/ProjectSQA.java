@@ -3,6 +3,10 @@ package model;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
+/**
+ * this class is responsible for having the properties of each project and being
+ * able to access the stage and person classes
+ */
 public class ProjectSQA {
 
 	private String name;
@@ -73,6 +77,7 @@ public class ProjectSQA {
 	public String registerPerson(String name, String phone, String typePerson) {
 
 		String register = name + "'s data was registered successfully\n";
+
 		if (typePerson == "Clients") {
 			client = new Person(name, phone, "Costumer");
 		} else {
@@ -91,11 +96,10 @@ public class ProjectSQA {
 	 */
 	public String assingDate(int[] month) {
 		/*
-		 * To assign the date from one Calendar object to another Calendar object safely
+		 * To assign the date from one Calendar object to another Calendar object safe
 		 * and to avoid errors, the .clone() method can be used to create a copy of the
-		 * original
-		 * object. In this way, if one of the instances is modified, the other will not
-		 * be affected.
+		 * original object. In this way, if one of the instances is modified, the other
+		 * will not be affected.
 		 */
 
 		String init = view.format(this.startDate.getTime()); // for show the start date of the project
@@ -136,17 +140,15 @@ public class ProjectSQA {
 			stage[counterStage].setRealEnd((Calendar) realEnd.clone());
 
 			approbation = "The stage " + getStage(counterStage).getType() + " was approved on "
-						+ view.format(stage[counterStage].getRealEnd().getTime());
+					+ view.format(stage[counterStage].getRealEnd().getTime());
 
 			if (counterStage < 5) {
 				this.realEnd = realEnd;
-				stage[++counterStage].setRealStart( (Calendar) realEnd.clone() );
+				stage[++counterStage].setRealStart((Calendar) realEnd.clone());
 				stage[counterStage].setMode(true);
 
 			}
-
 		} else {
-			
 			approbation = "All the stage was approved. " + name + "'s project:\n-Real start date:" +
 					init + "\n-Real end Date: " + view.format(this.realEnd.getTime());
 		}
@@ -154,13 +156,33 @@ public class ProjectSQA {
 
 	}
 
+	/**
+	 * This control method builds a message from a variable with the name of the
+	 * project, with the information returned by the lessons of the selected stage.
+	 * 
+	 * @param pos Positon of the stage selected
+	 * @return name of the project and recorded lessons of the stage
+	 */
+	public String lessonStage(int pos) {
+		StringBuilder msg = new StringBuilder();
+		msg.append("\n \n\3Project: " + name);
+		msg.append("\n" + stage[pos].lessonStage());
+		return msg.toString();
+	}
+
+	/**
+	 * @return the name of the project
+	 */
 	public String getName() {
 		return name;
 	}//
 
+	/**
+	 * 
+	 * @param realEnd Save the final end date of the project
+	 */
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
 	}
 
-	
 }

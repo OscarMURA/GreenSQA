@@ -1,5 +1,7 @@
 package model;
-
+/**
+  * Enumeration of the types of capsules
+  */
 public enum TypeCapsule {
 
 	// Possible types of capsules
@@ -7,10 +9,8 @@ public enum TypeCapsule {
 	Manage("Management"),
 	Domain("Domain-specific"),
 	Experience("Experience-based");
-
 	// Type of the capsule
 	public final String type;
-
 	/**
 	 * Constructor for the enumeration.
 	 * @param type The type of the capsule.

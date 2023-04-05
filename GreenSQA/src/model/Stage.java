@@ -2,6 +2,11 @@ package model;
 
 import java.util.Calendar;
 
+/**
+ * This stage class is in charge of having the properties and functions of a
+ * stage object, and containing in it an instance arrangement of the capsule
+ * class
+ */
 public class Stage {
 
 	private TypeStage typeStage;
@@ -38,7 +43,6 @@ public class Stage {
 			this.capsule[capCouter++] = capsule;
 			register = "The capsule was registered successfully\n";
 		}
-
 		return register;
 	}
 
@@ -82,7 +86,7 @@ public class Stage {
 
 	public Capsule searchCapsule(String id) {
 
-		Capsule capsule=null;
+		Capsule capsule = null;
 		boolean isFound = false;
 
 		for (int i = 0; i < this.capsule.length && !isFound; i++) {
@@ -94,14 +98,48 @@ public class Stage {
 		return capsule;
 	}
 
+	/**
+	 * This voew method counts the quantity of a type of capsule
+	 * 
+	 * @param word type capsule
+	 * @return counts of a type of capsule
+	 */
 	public int amountTypeCap(String word) {
 		int type = 0;
-		for (int i = 0; i < capsule.length; i++) {
-			if(this.capsule[i]!=null && this.capsule[i].getTypeCapsule().equalsIgnoreCase(word)){
+		boolean isNull = false;
+		for (int i = 0; i < capsule.length && !isNull; i++) {
+			if (this.capsule[i] != null && this.capsule[i].getTypeCapsule().equalsIgnoreCase(word)) {
 				type++;
+			} else {
+				isNull = true;
 			}
 		}
 		return type;
+	}
+
+	/**
+	 * This method stores the lessons in a String variable as long as you already
+	 * have capsules registered at the current stage, by traversing the array of
+	 * capsules
+	 * 
+	 * @return the variable that has or does not have the lesions of the capsules
+	 */
+	public String lessonStage() {
+		String msg = "";
+		boolean isNull = false;
+		for (int i = 0; i < capsule.length && !isNull; i++) {
+			if (capsule[i] != null) {
+				msg += "\n \nId:" + capsule[i].getId();
+				msg += "\tCollaborator: " + capsule[i].getCollaborator();
+				msg += "\nLesson: " + capsule[i].getLearning();
+			} else {
+				if (capsule[0] == null) {
+					msg = "The " + getType() + " stage does not have capsule";
+				}
+				isNull = true;
+			}
+		}
+		return msg;
 	}
 
 	/**
@@ -138,7 +176,7 @@ public class Stage {
 
 	public Calendar getRealStart() {
 		return this.realStart;
-	}
+	}///
 
 	public void setRealStart(Calendar realStart) {
 		this.realStart = realStart;

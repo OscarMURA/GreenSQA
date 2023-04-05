@@ -2,6 +2,10 @@ package model;
 
 import java.util.Calendar;
 
+/**
+ * This class is in charge of controlling the functions of each class called
+ * from the administration class
+ */
 public class Controller {
 
     private final int SIZE = 10;
@@ -77,7 +81,6 @@ public class Controller {
                 currentProject = projectSQA[i];
             }
         }
-
         return isFound;
     }
 
@@ -126,7 +129,7 @@ public class Controller {
         for (int i = 0; i < amoProject && !isFound; i++) {
             for (int j = 0; j < 6 && !isFound; j++) {
                 if (projectSQA[i] != null) {
-                    
+
                     isFound = projectSQA[i].getStage(j).capsuleApproval(id);
                     if (isFound) {
                         project = projectSQA[i].getName();
@@ -177,7 +180,6 @@ public class Controller {
 
     /**
      * URL for publishing approved capsules related to organizational interests.
-     * 
      * @return The URL for the published capsules.
      */
     public String publishCapsule() {
@@ -186,40 +188,73 @@ public class Controller {
 
     /**
      * This view method returns the number of capsules according to their type,
-     * there are two cases divided into two options, either for all projects (1) or
-     * for a specific project (2).
+     * there are two cases divided into two options using conditionals. Either for
+     * all the projects (1) that uses a reference object for each of the objects or
+     * for a current project that the user is in (2), which does not go through the
+     * project cycle, only the stages
      * 
-     * @param option the option 1 or 2.It's already burned in the Administration system
+     * @param option the option 1 or 2.It's already burned in the Administration
+     *               system
      * @return Message showing the amount for each type of capsule
      */
     public String amountType(int option) {
         int technical = 0, management = 0, domainSpecific = 0, experience = 0;
-        String msg = "\nCapsule Type Amount: ";
-        switch (option) {
-            case 1:
-                for (int i = 0; i < amoProject; i++) {// project cycle created
-                    for (int j = 0; j <= projectSQA[i].counStage(); j++) {// cycle until the last stage activated
+        boolean finish = false;
+        String msg = "\n\3Capsule Type Amount:\3 ";
 
-                        technical += projectSQA[i].getStage(j).amountTypeCap("Technical");
-                        management += projectSQA[i].getStage(j).amountTypeCap("Management");
-                        domainSpecific += projectSQA[i].getStage(j).amountTypeCap("Domain-specific");
-                        experience += projectSQA[i].getStage(j).amountTypeCap("Experience-based");
-                    }
-                }
-                break;
+        for (int i = 0; i < amoProject && !finish; i++) {// project cycle created
 
-            case 2:
-                for (int i = 0; i <= currentProject.counStage(); i++) {// cycle until the last stage activated
-                    technical += currentProject.getStage(i).amountTypeCap("Technical");
-                    management += currentProject.getStage(i).amountTypeCap("Management");
-                    domainSpecific += currentProject.getStage(i).amountTypeCap("Domain-specific");
-                    experience += currentProject.getStage(i).amountTypeCap("Experience-based");
-                }
-                break;
+            if (option == 1) {// reference object for each of the objects
+                currentProject = projectSQA[i];
+            }
+
+            for (int j = 0; j <= currentProject.counStage(); j++) {// cycle until the last stage activated
+                technical += currentProject.getStage(j).amountTypeCap("Technical");
+                management += currentProject.getStage(j).amountTypeCap("Management");
+                domainSpecific += currentProject.getStage(j).amountTypeCap("Domain-specific");
+                experience += currentProject.getStage(j).amountTypeCap("Experience-based");
+            }
+
+            if (option == 2) {// breaks the loop when the user is in the current project
+                finish = true;
+            }
         }
         msg += "\n -Amount Technical: " + technical + "\n -Amount Management: " + management +
                 "\n -Amount Domain-specific: " + domainSpecific + "\n -Amount Experience-based: " + experience;
 
+        return msg;
+    }
+
+    /**
+     * This control method is in charge of searching all the registered lessons of
+     * a project according to the selected stage, it will also have 2 "execution"
+     * conditionals. The first(1) is in charge of using a reference project object
+     * to go through the arrangement of each one of the projects with a cycle, with
+     * the objective of returning the lessons of each project according to the stage
+     * chosen by the user. And the second (2), only returns the lessons of the
+     * project that the user is located, breaks the fix cycle with a boolean.
+     * ¡The options are burned in the system!
+     * 
+     * @param stage     Position of the stage selected.
+     * @param execution Option 1 or 2
+     * @return lesson of the stage selected
+     */
+    public String lessonStage(int stage, int execution) {
+        String msg = "";
+        boolean finish = false;
+        for (int i = 0; i < amoProject && !finish; i++) {
+            if (execution == 1) {// reference object for each of the objects
+                currentProject = projectSQA[i];
+            }
+            msg += currentProject.lessonStage(stage);
+
+            if (execution == 2) {// break the loop when the user is in the current project in the terminal
+                finish = true;
+            }
+        }
+        if (projectSQA[0] == null) {
+            msg = "There are no projects";
+        }
         return msg;
     }
 }

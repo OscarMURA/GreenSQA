@@ -4,16 +4,28 @@ import model.Controller;
 import java.util.Calendar;
 import java.util.Scanner;
 
+/**
+ * This class is where the main functional requirements of the integrator are
+ * executed
+ */
 public class Administration {
 
 	private Controller controller;
 	private Scanner reader;
 
+	/**
+	 * Builder Method of the class Administration
+	 */
 	public Administration() {
 		reader = new Scanner(System.in);
 		controller = new Controller();
 	}
 
+	/**
+	 * The main method of the application that starts the program and receives
+	 * command line arguments.
+	 * @param args The command line arguments to be processed by the application.
+	 */
 	public static void main(String[] args) {
 		double option = 0;
 		boolean follow = false;
@@ -24,13 +36,12 @@ public class Administration {
 			System.out.println("\n\3Project's Management\3\n");
 
 			System.out.println("1.Creacte project\n2.Search Project\n3.Culminate capsule\n4.Publish Capsule");
-			System.out.println("5.Amount Capsule Type of all projects\n0.Exit");
+			System.out.println("5.Amount Capsule Type of all projects\n6.Lesson Stage\n0.Exit");
 
 			do {
 				System.out.print("Correctly Type the option: ");
 				option = admin.validateDouble();
-			} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 5.0
-					&& option != 0.0);
+			} while (!(option >= 0 && option <= 6 && option == Math.floor(option)));
 
 			follow = admin.principalExecution((int) option);
 
@@ -42,13 +53,11 @@ public class Administration {
 					do {
 						System.out.print("Correctly Type the option: ");
 						option = admin.validateDouble();
-					} while (option != 1.0 && option != 2.0 && option != 3.0 && option != 4.0 && option != 5.0
-							&& option != 0.0);
+					} while (!(option >= 0 && option <= 6 && option == Math.floor(option)));
 
 					admin.projectExecution((int) option);
 
-
-				} while (option != 0 && option != 5);
+				} while (option != 0 && option != 6);
 
 			}
 		} while (option != 0);
@@ -62,7 +71,7 @@ public class Administration {
 		lines();
 		System.out.println("\3" + controller.projectName() + " Project menu\3\n");
 		System.out.println(
-				"1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Amount capsule type of this project\n5.Go to menu\n0.Exit");
+				"1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Amount capsule type of this project\n5.Lesson Stage\n6.Go to menu\n0.Exit");
 	}
 
 	/**
@@ -91,6 +100,9 @@ public class Administration {
 			case 5:
 				System.out.println(controller.amountType(1));
 				break;
+			case 6:
+				lessonStage(1);
+				break;
 			case 0:
 				System.out.println("Exit");
 
@@ -98,15 +110,17 @@ public class Administration {
 		return follow;
 	}
 
-	/*This method executes the project menu options, either register capsules,
+	/**
+	 * This method executes the project menu options, either register capsules,
 	 * approve capsules or approve stages
 	 */
 	public void projectExecution(int option) {
 		switch (option) {
 			case 1 -> registerCapsule();
 			case 2 -> capsuleApproval();
-			case 3 -> stageApprobation();
-			case 4 ->System.out.println(controller.amountType(2));
+			case 3 -> approbationStage();
+			case 4 -> System.out.println(controller.amountType(2));
+			case 5 -> lessonStage(2);
 
 			case 0 -> System.out.println("You went out of the program. ");
 		}
@@ -257,7 +271,7 @@ public class Administration {
 	 * This method shows that the stage has been approved, by instantiating a
 	 * calendar variable to store the actual end date of the stage.
 	 */
-	public void stageApprobation() {
+	public void approbationStage() {
 		lines();
 		System.out.println("\3Stage approval\3\n");
 		Calendar realEnd = Calendar.getInstance();
@@ -326,9 +340,12 @@ public class Administration {
 				if (contador % 2 == 0) {
 					init = description.indexOf("#", finaL);
 					finaL = description.indexOf("#", init + 1);
-					pos = getFirstValidPosition(wordKey);
-					wordKey[pos] = description.substring(init + 1, finaL);
-					finaL += 2;
+					if (finaL != (init + 1)) {
+						pos = getFirstValidPosition(wordKey);
+						wordKey[pos] = description.substring(init + 1, finaL);
+						System.out.println(wordKey[pos]);
+						finaL += 2;
+					}
 				}
 			}
 		}
@@ -355,8 +372,7 @@ public class Administration {
 
 	/**
 	 * view method that looks for the capsules to approve them, and prints if it
-	 * exists
-	 * approved otherwise
+	 * exists approved otherwise
 	 */
 	public void capsuleApproval() {
 		String id = "";
@@ -365,5 +381,27 @@ public class Administration {
 		System.out.print("Type the capsule's id: ");
 		id = read(reader);
 		System.out.println(controller.capsuleApproval(id));
+	}
+
+	/**
+	 * This view method has the function of selecting the stage for the purpose of
+	 * viewing the lessons of it. Either of all the projects (execution==1) or of
+	 * the project that the user is presenting (execution==2).
+	 * To finally present the lessons of the chosen stage
+	 * 
+	 * @param execution Number 1 or 2
+	 */
+	public void lessonStage(int execution) {
+		double stage = 0;
+		lines();
+		System.out.println("\n\3Stage's lesson:\3\n ");
+		System.out.println("1.Start\n2.Analisys\n3.Desing\n4.Execution\n5.Clouse\n6.Monitoring and project control\n");
+		do {
+			System.out.print("Type the stage that you want to see tha lessons: ");
+			stage = validateDouble();
+		} while (!(stage >= 1 && stage <= 6 && stage == Math.floor(stage)));
+
+		System.out.println(controller.lessonStage((int) stage - 1, execution));
+
 	}
 }
