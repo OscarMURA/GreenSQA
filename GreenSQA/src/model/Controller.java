@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -12,7 +13,9 @@ public class Controller {
     private ProjectSQA[] projectSQA = new ProjectSQA[SIZE];
     private ProjectSQA currentProject;
     private int amoProject = 0;
-    private String correctFuncion = "";
+    private SimpleDateFormat view = new SimpleDateFormat("dd/MM/yyyy 'hours: ' hh:mm:ss a");
+    private String url[] = new String[3000];// The var url have a size of 3000 by: 10(Project)*6(stage)*50(capsules)
+    private int accountUrl = 0;
 
     public Controller() {
     }
@@ -98,8 +101,9 @@ public class Controller {
      */
     public String addCapsule(String id, String description, int type, String nameCollaborator, String charge,
             String learning, String[] hashtag) {
-
+        String msg = "";
         if (currentProject != null) {
+
             TypeCapsule typeCapsule = null;
             switch (type) {
                 case 1 -> typeCapsule = TypeCapsule.Tecnic;
@@ -108,10 +112,9 @@ public class Controller {
                 case 4 -> typeCapsule = TypeCapsule.Experience;
             }
             Capsule capsule = new Capsule(id, description, typeCapsule, nameCollaborator, charge, learning, hashtag);
-            correctFuncion = currentProject.getStage(currentProject.counStage()).addCapsule(capsule);
+            msg = currentProject.getStage(currentProject.counStage()).addCapsule(capsule);
         }
-
-        return correctFuncion;
+        return msg;
     }
 
     /**
@@ -125,17 +128,17 @@ public class Controller {
         String project, stage;
         String capsule = "The calpsule with its " + id + " not exist";
         boolean isFound = false;
+        Calendar aprobationDate = Calendar.getInstance();
 
         for (int i = 0; i < amoProject && !isFound; i++) {
             for (int j = 0; j < 6 && !isFound; j++) {
                 if (projectSQA[i] != null) {
-
-                    isFound = projectSQA[i].getStage(j).capsuleApproval(id);
+                    isFound = projectSQA[i].getStage(j).capsuleApproval(id, aprobationDate);
                     if (isFound) {
                         project = projectSQA[i].getName();
                         stage = projectSQA[i].getStage(i).getType();
                         capsule = "The calpsule " + id + " from " + stage + "'s stage of the" + project
-                                + " project was approved. ";
+                                + " project was approved. Date: " + view.format(aprobationDate.getTime());
                     }
                 }
             }
@@ -180,10 +183,42 @@ public class Controller {
 
     /**
      * URL for publishing approved capsules related to organizational interests.
+     * 
      * @return The URL for the published capsules.
      */
-    public String publishCapsule() {
-        return " \3 https://www.youtube.com/watch?v=dQw4w9WgXcQ  \3";
+    public String publishCapsule(String project, String stage, int posStage, String idCapsule) {
+        String url = "";
+        searchProjectSQA(project);
+        currentProject.getStage(posStage).searchCapsule(idCapsule).setPublish(true);
+        url = "https://www.capsulas/capsula/" + idCapsule + "/project:" + project + "/stage:" + stage + ".com";
+        this.url[accountUrl++] = url;
+        return url;
+    }
+
+    public String[][] showCapule(boolean aprobation) {
+        String msg[][] = new String[100][4];
+        int l = 0;
+        for (int i = 0; i < amoProject; i++) {// looop of project
+            for (int j = 0; j <= projectSQA[i].counStage(); j++) {// loop of stage
+                for (int j2 = 0; j2 < 50; j2++) {
+                    if (projectSQA[i].getStage(j).getCapsule(j2) != null// ←if there are capsules
+                            && projectSQA[i].getStage(j).getCapsule(j2).getAprobation() == aprobation) {
+                        // ↑ if the capsule is approved or is not approved
+
+                        if (projectSQA[i].getStage(j).getCapsule(j2).getPublish() == false) {
+                            // ↑ if the capsule is not published
+                            msg[l][0] = projectSQA[i].getName();
+                            msg[l][1] = projectSQA[i].getStage(j).getType();
+                            msg[l][2] = projectSQA[i].getStage(j).getCapsule(j2).getId();
+                            msg[l][3] = String.valueOf(j);
+
+                            l++;
+                        }
+                    }
+                }
+            }
+        }
+        return msg;
     }
 
     /**
@@ -243,6 +278,7 @@ public class Controller {
         String msg = "";
         boolean finish = false;
         for (int i = 0; i < amoProject && !finish; i++) {
+
             if (execution == 1) {// reference object for each of the objects
                 currentProject = projectSQA[i];
             }
@@ -257,4 +293,89 @@ public class Controller {
         }
         return msg;
     }
+
+    /**
+     * 
+     * @return
+     */
+    public String moreAmountCapsule() {
+        String msg = "";
+        int maxium = -1;
+        String project = "";
+
+        for (int i = 0; i < amoProject; i++) {
+            if (projectSQA[i].capsuleCounter() > maxium) {
+                maxium = projectSQA[i].capsuleCounter();
+                project = projectSQA[i].getName();
+            }
+        }
+        msg = project + " - N#: " + maxium;
+        if (projectSQA[0] == null) {
+            msg = "There are no projects";
+        }
+
+        return msg;
+    }
+
+    public String searchCollaboratorCapsule(String collaborator) {
+        String msg = "";
+
+        for (int i = 0; i < amoProject; i++) {
+            for (int j = 0; j <= projectSQA[i].counStage(); j++) {
+                for (int j2 = 0; j2 < projectSQA[i].getStage(j).getCapCouter(); j2++) {
+
+                    if (projectSQA[i].getStage(j).getCapsule(j2).getCollaborator().equalsIgnoreCase(msg)) {
+                        String project = projectSQA[i].getName();
+                        String stage = projectSQA[i].getStage(j).getType();
+                        String capsule = projectSQA[i].getStage(j).getCapsule(j2).getId();
+                        msg = "The collaborator " + collaborator + " registered in the:\n\t-Project: " + project;
+                        msg += "\n\t-Stage: " + stage + "\n\t-Idcapsule: " + capsule;
+                    }
+                }
+
+            }
+
+        }
+        if (msg.equals("")) {
+            msg = "The collaborator was not found or no exist";
+        }
+        if (projectSQA[0] == null) {
+            msg = "There are no projects";
+        }
+        return msg;
+    }
+
+    public String searchCapsule(String text) {
+        StringBuilder msg = new StringBuilder();
+        String[] searchWord = text.split(" ");
+        boolean isFound;// if was/was not found a capsule
+
+        for (int i = 0; i < amoProject; i++) {// loop of projects
+            for (int j = 0; j <= projectSQA[i].counStage(); j++) {// loop of project stage
+
+                for (int j2 = 0; j2 < projectSQA[i].getStage(j).getCapCouter(); j2++) {// loop of stages capsules
+                    isFound = false;
+                    String[] hashtag = projectSQA[i].getStage(j).getCapsule(j2).getHashtag();
+                    for (int k = 0; k < hashtag.length && !isFound; k++) {// loop of knowlegde capsules hashtag
+
+                        for (int l = 0; l < searchWord.length && !isFound; l++) {// loop of the search word
+                            if (hashtag[k].equalsIgnoreCase(searchWord[l])) {
+                                isFound = true;
+                                msg.append(projectSQA[i].getStage(j).getCapsule(i).toString());
+                            }
+                        } // close loop of searchWord
+                    } // close loop of hashtag
+                } // close loop of capsules
+            } // close loop of stage
+        } // close loop of project
+
+        if (msg.length() == 0) {
+            msg.append("There are not capsules with its search text");
+        }
+        if (projectSQA[0] == null) {
+            msg.append("There are no projects");
+        }
+        return msg.toString();
+    }
+
 }

@@ -24,6 +24,7 @@ public class Administration {
 	/**
 	 * The main method of the application that starts the program and receives
 	 * command line arguments.
+	 * 
 	 * @param args The command line arguments to be processed by the application.
 	 */
 	public static void main(String[] args) {
@@ -32,16 +33,16 @@ public class Administration {
 
 		Administration admin = new Administration();
 		do {
-			admin.lines();
+			Administration.lines();
 			System.out.println("\n\3Project's Management\3\n");
-
 			System.out.println("1.Creacte project\n2.Search Project\n3.Culminate capsule\n4.Publish Capsule");
-			System.out.println("5.Amount Capsule Type of all projects\n6.Lesson Stage\n0.Exit");
+			System.out.println("5.Amount Capsule Type of all projects\n6.Lesson Stage");
+			System.out.println("7.More amount capsules\n8.Search Capsules Collaborator\n9.Search Capsules\n0.Exit");
 
 			do {
 				System.out.print("Correctly Type the option: ");
 				option = admin.validateDouble();
-			} while (!(option >= 0 && option <= 6 && option == Math.floor(option)));
+			} while (!(option >= 0 && option <= 9 && option == Math.floor(option)));
 
 			follow = admin.principalExecution((int) option);
 
@@ -71,7 +72,7 @@ public class Administration {
 		lines();
 		System.out.println("\3" + controller.projectName() + " Project menu\3\n");
 		System.out.println(
-				"1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Amount capsule type of this project\n5.Lesson Stage\n6.Go to menu\n0.Exit");
+				"1.Register Capsule\n2.Aprobation Capsule\n3.Culminate Stage\n4.Amount capsule type of this project\n5.Lesson Stage\n6.Go to main menu\n0.Exit");
 	}
 
 	/**
@@ -103,8 +104,17 @@ public class Administration {
 			case 6:
 				lessonStage(1);
 				break;
+			case 7:
+				moreAmountCapsule();
+				break;
+			case 8:
+				SearchColaboratorCapsule();
+				break;
+			case 9:
+				searchCapsule();
+				break;
 			case 0:
-				System.out.println("Exit");
+				System.out.println("Exit...You are unique\3");
 
 		}
 		return follow;
@@ -121,7 +131,6 @@ public class Administration {
 			case 3 -> approbationStage();
 			case 4 -> System.out.println(controller.amountType(2));
 			case 5 -> lessonStage(2);
-
 			case 0 -> System.out.println("You went out of the program. ");
 		}
 	}
@@ -188,15 +197,17 @@ public class Administration {
 	 * planned for each stage of the project
 	 */
 	public void assingDate() {
+
 		int[] month = new int[6];
 		lines();
-		System.out.println("\3Assing tha date for each stage\3 \nHow long months it will carry the ");
+		System.out.println("\3Assing tha date for each stage\3\n \nHow long months it will carry the ");
 
 		for (int i = 0; i < month.length; i++) {
 			System.out.print((i + 1) + ". " + controller.stageName(i) + "'s stage:  ");
 			month[i] = reader.nextInt();
 		}
 		System.out.println(controller.assingDate(month));
+
 	}
 
 	/**
@@ -227,7 +238,34 @@ public class Administration {
 	public void publishCapsules() {
 		lines();
 		System.out.println("\3Publish Capsules\3");
-		System.out.println("Url important to see: " + controller.publishCapsule());
+		boolean thereCapsule = false;
+		boolean isNull = false;
+		String show[][] = controller.showCapule(true);
+		int option = 0;
+		String url = "";
+		for (int i = 0; i < show.length && !isNull; i++) {
+			if (show[i][0] != null) {
+				System.out.println(
+						(i + 1) + "\t\3id " + show[i][2] + "\tProject: " + show[i][0] + "\tStage: " + show[i][1]);
+				thereCapsule = true;// There are capsules to publish
+			} else {
+				isNull = true;
+			}
+		}
+		if (thereCapsule) {
+			do {
+				System.out.println("Enter the number of the capsule you want to publish ");
+				option = reader.nextInt();
+				if (option != 0) {
+					option -= 1;
+					url = controller.publishCapsule(show[option][0], show[option][1], Integer.valueOf(show[option][3]),
+							show[option][2]);
+					System.out.println("Url" + url);
+				}
+			} while (option != 0);
+		} else {
+			System.out.println(" No exist capsule approved for publicate ;(");
+		}
 	}
 
 	/**
@@ -295,7 +333,7 @@ public class Administration {
 		int free = 0;
 		do {
 			free = getFirstValidPosition(hashtag);
-			System.out.print("Type the description id with word key(#sush as#): ");
+			System.out.print("Type the description id with word key(#such as#): ");
 			description = read(reader);
 			hashtag = capsuleHashtag(description, hashtag);
 		} while (hashtag[free] == null);
@@ -340,10 +378,10 @@ public class Administration {
 				if (contador % 2 == 0) {
 					init = description.indexOf("#", finaL);
 					finaL = description.indexOf("#", init + 1);
-					if (finaL != (init + 1)) {
+					
+					if (finaL != (init + 1)) {//for verify that lest "##"
 						pos = getFirstValidPosition(wordKey);
 						wordKey[pos] = description.substring(init + 1, finaL);
-						System.out.println(wordKey[pos]);
 						finaL += 2;
 					}
 				}
@@ -360,6 +398,7 @@ public class Administration {
 	 */
 	public int getFirstValidPosition(String[] array) {
 		int pos = -1;
+		
 		boolean isFound = false;
 		for (int i = 0; i < array.length && !isFound; i++) {
 			if (array[i] == null) {
@@ -375,12 +414,34 @@ public class Administration {
 	 * exists approved otherwise
 	 */
 	public void capsuleApproval() {
+		String show[][] = controller.showCapule(false);
 		String id = "";
+		boolean isNull = false;
+		boolean thereCapsule = false;
 		lines();
-		System.out.println("\3Casule Aprobation\3 \n");
-		System.out.print("Type the capsule's id: ");
-		id = read(reader);
-		System.out.println(controller.capsuleApproval(id));
+		System.out.println("\3Capsule Aprobation\3 \n");
+
+		for (int i = 0; i < show.length && !isNull; i++) {
+			if (show[i][0] != null) {
+				System.out.println("\t\3id " + show[i][2] + "\tProject: " + show[i][0] + "\tStage: " + show[i][1]);
+				thereCapsule = true;// there are capsules to publish
+			} else {
+				isNull = true;
+			}
+		}
+		if (thereCapsule) {
+			do {
+				System.out.print("Type the capsule's id (Exit=0): ");
+				id = read(reader);
+				if (!(id.equals("0"))) {
+					System.out.println(controller.capsuleApproval(id));
+				}
+			} while (!(id.equals("0")));
+
+		} else {
+			System.out.println("There is no stage or they have already been approved");
+		}
+
 	}
 
 	/**
@@ -397,11 +458,33 @@ public class Administration {
 		System.out.println("\n\3Stage's lesson:\3\n ");
 		System.out.println("1.Start\n2.Analisys\n3.Desing\n4.Execution\n5.Clouse\n6.Monitoring and project control\n");
 		do {
-			System.out.print("Type the stage that you want to see tha lessons: ");
+			System.out.print("Type the stage that you want to see the lessons: ");
 			stage = validateDouble();
 		} while (!(stage >= 1 && stage <= 6 && stage == Math.floor(stage)));
 
 		System.out.println(controller.lessonStage((int) stage - 1, execution));
-
 	}
+
+	public void moreAmountCapsule() {
+		lines();
+		System.out.println("\3The project with more capsules is: ");
+		System.out.println("\t+" + controller.moreAmountCapsule());
+	}
+
+	public void SearchColaboratorCapsule() {
+		String collaborator = "";
+		lines();
+		System.out.println("\3Search Collaborator\3\n");
+		collaborator = read(reader);
+		System.out.println(controller.searchCollaboratorCapsule(collaborator));
+	}
+
+	public void searchCapsule() {
+		String text = "";
+		lines();
+		System.out.println("\3Search Capsules\3\n");
+		text = read(reader);
+		System.out.println(controller.searchCapsule(text));
+	}
+
 }

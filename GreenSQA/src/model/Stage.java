@@ -27,6 +27,10 @@ public class Stage {
 		return capsule[i];
 	}
 
+	public int getCapCouter() {
+		return capCouter;
+	}
+
 	/**
 	 * Control method that adds capsules as long as its counter is less than the
 	 * size of the array where it is stored
@@ -55,15 +59,14 @@ public class Stage {
 
 	/**
 	 * Approve knowledge capsules through the id of the capsule, with the help of
-	 * the method of finding capsules
+	 * the method of finding capsules. Also, save the aprobation date of the capsule
 	 * 
 	 * @param id
+	 * @param aprobationDate
 	 * @return true: the capsule was approved, false: the capsule did not exist and
 	 *         was not approved
 	 */
-	public boolean capsuleApproval(String id) {
-
-		Calendar aprobationDate = Calendar.getInstance();
+	public boolean capsuleApproval(String id, Calendar aprobationDate) {
 		boolean aprobation = false;
 
 		if (searchCapsule(id) != (null)) {

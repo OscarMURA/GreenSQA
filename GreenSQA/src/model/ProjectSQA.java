@@ -104,12 +104,12 @@ public class ProjectSQA {
 
 		String init = view.format(this.startDate.getTime()); // for show the start date of the project
 
-		stage[0].setEnd((Calendar) stage[0].getStart().clone());
+		stage[0].setEnd( (Calendar) stage[0].getStart().clone() );
 		stage[0].getEnd().add(Calendar.MONTH, month[0]);
 
 		for (int j = 1; j < month.length; j++) {
 
-			stage[j].setStart((Calendar) stage[j - 1].getEnd().clone());
+			stage[j].setStart(  (Calendar) stage[j - 1].getEnd().clone()  );
 			stage[j].setEnd((Calendar) stage[j].getStart().clone());
 			stage[j].getEnd().add(Calendar.MONTH, month[j]);
 
@@ -183,6 +183,14 @@ public class ProjectSQA {
 	 */
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
+	}
+
+	public int capsuleCounter(){
+		int amountCapsule=0;
+		for (int i = 0; i < stage.length; i++) {
+			amountCapsule+=stage[i].amountTypeCap(name);
+		}
+		return amountCapsule;
 	}
 
 }
