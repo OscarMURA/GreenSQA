@@ -324,6 +324,10 @@ public class Controller {
         return msg;
     }
 
+    /**
+     *The project returns with the purpose that exists a project already created in the system
+     * @return
+     */
     public ProjectSQA getCurrentProject() {
         return currentProject;
     }
