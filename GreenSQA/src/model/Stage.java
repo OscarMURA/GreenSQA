@@ -27,6 +27,10 @@ public class Stage {
 		return capsule[i];
 	}
 
+	/**
+	 * This method returns the number of registered capsules of each stage *
+	 *  @return Capsule amount registered
+	 */
 	public int getCapCouter() {
 		return capCouter;
 	}
@@ -177,17 +181,33 @@ public class Stage {
 		return end;
 	}
 
+	/**
+	 * Control method that returns the real start date of a capsule
+	 * @return realStard
+	 */
 	public Calendar getRealStart() {
 		return this.realStart;
 	}///
 
+	/**
+	 * Control method that keeps the actual start date of the capsule
+	 * @param realStart capsula real start date
+	 */
 	public void setRealStart(Calendar realStart) {
 		this.realStart = realStart;
 	}
-
+	/**
+	 * This control method keeps the actual date of ending of the Stage
+	 * @param realEnd the actual date of ending of the project
+	 */
 	public void setRealEnd(Calendar realEnd) {
 		this.realEnd = realEnd;
 	}
+
+	/**
+	 * This control method returns the real date of stage ending
+	 * @return
+	 */
 
 	public Calendar getRealEnd() {
 		return realEnd;

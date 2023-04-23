@@ -29,17 +29,29 @@ public class Controller {
      * @param budget
      * @return a String if registered or can no longer be registered
      */
-    public String registerProject(String name, Calendar startDate, double budget) {
-        String register = "The project was not register succesfully, no space to register\n";
+    public boolean registerProject(String name, Calendar startDate, double budget) {
+
+        boolean register = false;
 
         if (amoProject != projectSQA.length) {
-
             projectSQA[amoProject] = new ProjectSQA(name, startDate, budget);
-            register = "The project was register succesfully\n";
+            register = true;
             currentProject = projectSQA[amoProject];
             amoProject++;
         }
         return register;
+    }
+
+    public boolean verifyNoRepeatProyect(String name) {
+        boolean isFound = false;
+
+        for (int i = 0; i < amoProject && !isFound; i++) {
+            if (projectSQA[i].getName().equalsIgnoreCase(name)) {
+                isFound = true;
+            }
+        }
+        return isFound;
+
     }
 
     /**
@@ -118,9 +130,36 @@ public class Controller {
     }
 
     /**
+     * This control method is responsible for verifying that the same ID of a
+     * project or with other projects is not repeated, since they are unique
+     * @param id Capsule ID
+     * 
+     * @return If there is True returns, but the opposite
+     * 
+     */
+    public boolean verifyNoRepeatCapsule(String id) {
+        boolean repeat = false;
+
+        for (int i = 0; i < amoProject && !repeat; i++) {
+            for (int j = 0; j <= projectSQA[i].counStage() && !repeat; j++) {
+                for (int j2 = 0; j2 < projectSQA[i].getStage(j).getCapCouter() && !repeat; j2++) {
+                    for (int k = 0; k < projectSQA[i].getStage(j).getCapCouter() && !repeat; k++) {
+                        if (projectSQA[i].getStage(j).getCapsule(k).getId().equalsIgnoreCase(id)) {
+                            repeat = true;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return repeat;
+    }
+
+    /**
      * Method to approve the capsules from their id
      * 
-     * @param id
+     * @param id Capsule ID
      * @return if the capsule exists, it was approved, otherwise
      */
     public String capsuleApproval(String id) {
@@ -149,7 +188,7 @@ public class Controller {
     /**
      * Displays the name of a project stage.
      * 
-     * @param i: Position of a stage within a project.
+     * @param i Position of a stage within a project.
      * @return The name of the stage being searched for.
      */
     public String stageName(int i) {
@@ -178,13 +217,22 @@ public class Controller {
      * @return Whether the stage was approved or if no more stages can be approved.
      */
     public String approbationStage(Calendar realEnd) {
+
         return currentProject.approbationStage(realEnd);
+
     }
 
     /**
-     * URL for publishing approved capsules related to organizational interests.
      * 
-     * @return The URL for the published capsules.
+     * This control method is responsible for creating the URL of the capsule that
+     * was approved by the user, asking for basic data where the capsule comes.
+     * Also the mode of publication of the capsule changes to public (True)
+     * 
+     * @param project   Project name
+     * @param stage     stage name where was the capsule
+     * @param posStage  position from stage
+     * @param idCapsule
+     * @return The URL of the Capsula already approved returns
      */
     public String publishCapsule(String project, String stage, int posStage, String idCapsule) {
         String url = "";
@@ -194,6 +242,23 @@ public class Controller {
         this.url[accountUrl++] = url;
         return url;
     }
+
+    /**
+     * This method is controlled has the function of showing the capsules, and San
+     * those that are or not approved with exception to those already
+     * published.Therefore, the Sitema recovers an approval parameter if you want to
+     * observe the capsules already approved or not.
+     * Already found the desired capsule, save the data in a matrix with 100 rows
+     * and four columns.Each column of the Matrix will keep data according to its
+     * position such as: 0. Project Name, 1. Type of stage, 2. ID of the capsule and
+     * 3. Capsula position.
+     * The above has two objectives.The first is to show the URL to the user and the
+     * second to look for it when it is approved
+     * 
+     * @param approval True: Show approved capsules to see which one publish, false:
+     *                 see capsules that are not approved *
+     * @return Matrix with the capsules without approve or to publish
+     */
 
     public String[][] showCapule(boolean aprobation) {
         String msg[][] = new String[100][4];
@@ -211,7 +276,6 @@ public class Controller {
                             msg[l][1] = projectSQA[i].getStage(j).getType();
                             msg[l][2] = projectSQA[i].getStage(j).getCapsule(j2).getId();
                             msg[l][3] = String.valueOf(j);
-
                             l++;
                         }
                     }
@@ -260,6 +324,9 @@ public class Controller {
         return msg;
     }
 
+    public ProjectSQA getCurrentProject() {
+        return currentProject;
+    }
     /**
      * This control method is in charge of searching all the registered lessons of
      * a project according to the selected stage, it will also have 2 "execution"
@@ -295,8 +362,10 @@ public class Controller {
     }
 
     /**
+     * This control method is responsible for looking for the project that contains
+     * more capsules
      * 
-     * @return
+     * @return A project message with more capsules or that does not exist
      */
     public String moreAmountCapsule() {
         String msg = "";
@@ -316,6 +385,14 @@ public class Controller {
 
         return msg;
     }
+
+    /**
+     * This control method is used with the objective to find the capsules that a
+     * collaborator has registered
+     * 
+     * @param collaborator name of the collaborator
+     * @return The message returns if there are registered capsules
+     */
 
     public String searchCollaboratorCapsule(String collaborator) {
         String msg = "";
@@ -345,12 +422,21 @@ public class Controller {
         return msg;
     }
 
+    /**
+     * This control method is responsible for looking for the related capsules
+     * according to the key words that the user has, the system covers in each
+     * hashtag and compares each other's words
+     * 
+     * @param text the text with keyWords
+     * @return The Message With The Capsules related to the key words
+     */
     public String searchCapsule(String text) {
         StringBuilder msg = new StringBuilder();
         String[] searchWord = text.split(" ");
         boolean isFound;// if was/was not found a capsule
 
         for (int i = 0; i < amoProject; i++) {// loop of projects
+
             for (int j = 0; j <= projectSQA[i].counStage(); j++) {// loop of project stage
 
                 for (int j2 = 0; j2 < projectSQA[i].getStage(j).getCapCouter(); j2++) {// loop of stages capsules
@@ -370,10 +456,7 @@ public class Controller {
         } // close loop of project
 
         if (msg.length() == 0) {
-            msg.append("There are not capsules with its search text");
-        }
-        if (projectSQA[0] == null) {
-            msg.append("There are no projects");
+            msg.append(" There are not capsules with its search text");
         }
         return msg.toString();
     }

@@ -16,7 +16,8 @@ public class Capsule {
 	private Calendar aprobationDate = null;
 	private boolean aprobation = false;
 	private String hashtag[] = new String[20];
-	private boolean publish=false;
+	private boolean publish = false;
+
 	/**
 	 * Builder method from the Capsule class
 	 * 
@@ -45,24 +46,33 @@ public class Capsule {
 		return id;
 	}
 
-	public boolean getPublish(){
+	/**
+	 * Returns if the capsule is already published or not
+	 * 
+	 * @return True: is published, False: Not published
+	 */
+	public boolean getPublish() {
 		return this.publish;
 	}
 
-	public void setPublish(boolean publish){
-		this.publish=publish;
+	/**
+	 * Control method to save that a capsule is already published
+	 * @param publish True, for change to capsule already published
+	 */
+	public void setPublish(boolean publish) {
+		this.publish = publish;
 	}
 
 	/**
 	 * Saves the approval of the capsule by accepting a true
 	 * 
-	 * @param aprobation
+	 * @param aprobation 
 	 */
 	public void setAprobation(boolean aprobation) {
 		this.aprobation = aprobation;
 	}
-	
-	public boolean getAprobation(){
+
+	public boolean getAprobation() {
 		return this.aprobation;
 	}
 
@@ -70,9 +80,9 @@ public class Capsule {
 		return hashtag;
 	}
 
-
 	/**
 	 * Save the capsule approval date
+	 * 
 	 * @param aprobaDate the capsule approval date
 	 */
 
@@ -89,7 +99,13 @@ public class Capsule {
 		return aprobationDate;
 	}
 
-	
+	/**
+	 * This control method returns in a text chain returns the important data of the
+	 * capsule
+	 * 
+	 * @return Primordial data of the capsule
+	 */
+
 	public String toString() {
 		StringBuilder capsule = new StringBuilder();
 		capsule.append("\n \nCapsule: " + id);

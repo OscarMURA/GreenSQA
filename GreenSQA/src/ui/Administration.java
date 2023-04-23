@@ -9,7 +9,6 @@ import java.util.Scanner;
  * executed
  */
 public class Administration {
-
 	private Controller controller;
 	private Scanner reader;
 
@@ -59,7 +58,6 @@ public class Administration {
 					admin.projectExecution((int) option);
 
 				} while (option != 0 && option != 6);
-
 			}
 		} while (option != 0);
 	}
@@ -85,37 +83,24 @@ public class Administration {
 	public boolean principalExecution(int option) {
 		boolean follow = false;
 		switch (option) {
-			case 1:
-				registerProject();
-				follow = true;
-				break;
-			case 2:
-				follow = searchProject();
-				break;
-			case 3:
-				capsuleApproval();
-				break;
-			case 4:
-				publishCapsules();
-				break;
-			case 5:
-				System.out.println(controller.amountType(1));
-				break;
-			case 6:
-				lessonStage(1);
-				break;
-			case 7:
-				moreAmountCapsule();
-				break;
-			case 8:
-				SearchColaboratorCapsule();
-				break;
-			case 9:
-				searchCapsule();
-				break;
-			case 0:
-				System.out.println("Exit...You are unique\3");
+			case 1 -> follow = registerProject();
+			case 0 -> System.out.println("Exit...You are unique\3");
 
+		}
+
+		if(controller.getCurrentProject()!=null){
+			switch (option) {
+				case 2 -> follow = searchProject();
+				case 3 -> capsuleApproval();
+				case 4 -> publishCapsules();
+				case 5 -> System.out.println(controller.amountType(1));
+				case 6 -> lessonStage(1);
+				case 7 -> moreAmountCapsule();
+				case 8 -> SearchColaboratorCapsule();
+				case 9 -> searchCapsule();
+			} 
+		}else{
+			System.out.println("There are not projects");
 		}
 		return follow;
 	}
@@ -147,22 +132,34 @@ public class Administration {
 	 * name and the amount of investment. In order to create a project object by
 	 * calling the controller
 	 */
-	public void registerProject() {
+	public boolean registerProject() {
 
 		String name = "";
 		Calendar startDate = Calendar.getInstance();
 		double budget = 0;
+		boolean success = false;
+		boolean repeat = false;
 
 		lines();
 		System.out.println("\3Register Projects\3\n");
-		System.out.print("Type the project name: ");
-		name = read(reader);
+		do {
+			System.out.print("Type the project name, there must be no other: ");
+			name = read(reader);
+			repeat = controller.verifyNoRepeatProyect(name);
+		} while (repeat);
+
 		System.out.print("Type the project budget: ");
 		budget = validateDouble();
-		controller.registerProject(name, startDate, budget);
-		controller.searchProjectSQA(name);
-		registerPerson();
-		assingDate();
+		success = controller.registerProject(name, startDate, budget);
+
+		if (success) {
+			controller.searchProjectSQA(name);
+			registerPerson();
+			assingDate();
+		} else {
+			System.out.println("The project was not register succesfully, no space to register\n");
+		}
+		return success;
 	}
 
 	/**
@@ -324,12 +321,19 @@ public class Administration {
 	public void registerCapsule() {
 		String id = "", description = "", name = "", charge = "", learning = "";
 		String[] hashtag = new String[20];
+		boolean repeat = false;
 		double typeCapsule;
 
 		lines();
-		System.out.print(
-				"\3Register " + controller.stageName(controller.counStage()) + " capsule \3 \n Type the Capsule id: ");
-		id = reader.next();
+		System.out.println(
+				"\3Register " + controller.stageName(controller.counStage()) + " capsule \3");
+
+		do {
+			System.out.print("\nType the Capsule id, the id should not exists: ");
+			id = reader.next();
+			repeat = controller.verifyNoRepeatCapsule(id);
+		} while (repeat);
+
 		int free = 0;
 		do {
 			free = getFirstValidPosition(hashtag);
@@ -378,8 +382,8 @@ public class Administration {
 				if (contador % 2 == 0) {
 					init = description.indexOf("#", finaL);
 					finaL = description.indexOf("#", init + 1);
-					
-					if (finaL != (init + 1)) {//for verify that lest "##"
+
+					if (finaL != (init + 1)) {// for verify that lest "##"
 						pos = getFirstValidPosition(wordKey);
 						wordKey[pos] = description.substring(init + 1, finaL);
 						finaL += 2;
@@ -398,7 +402,7 @@ public class Administration {
 	 */
 	public int getFirstValidPosition(String[] array) {
 		int pos = -1;
-		
+
 		boolean isFound = false;
 		for (int i = 0; i < array.length && !isFound; i++) {
 			if (array[i] == null) {
@@ -465,12 +469,20 @@ public class Administration {
 		System.out.println(controller.lessonStage((int) stage - 1, execution));
 	}
 
+	/**
+	 * This view method is responsible for calling a method with the same name of
+	 * the controller with the aim of printing the projection with more capsules
+	 */
 	public void moreAmountCapsule() {
 		lines();
 		System.out.println("\3The project with more capsules is: ");
 		System.out.println("\t+" + controller.moreAmountCapsule());
 	}
 
+	/**
+	 * This view method is responsible for searching and presenting if a
+	 * collaborator has made capsules
+	 */
 	public void SearchColaboratorCapsule() {
 		String collaborator = "";
 		lines();
@@ -479,10 +491,17 @@ public class Administration {
 		System.out.println(controller.searchCollaboratorCapsule(collaborator));
 	}
 
+	/**
+	 * This method of view is responsible for showing the relative capsules to the
+	 * keywords that the user writes
+	 */
+
 	public void searchCapsule() {
 		String text = "";
 		lines();
 		System.out.println("\3Search Capsules\3\n");
+
+		System.out.print("Write the keywords to look for related capsules:\n\3 ");
 		text = read(reader);
 		System.out.println(controller.searchCapsule(text));
 	}
